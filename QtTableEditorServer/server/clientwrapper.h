@@ -2,7 +2,7 @@
 
 #include <QObject>
 
-class QTcpSocket;
+#include "../socket/socketadapter.h"
 
 class StudentDatabase;
 
@@ -23,7 +23,7 @@ public slots:
 
 private:
     qintptr socketDescriptor;
-    QTcpSocket* socket;
+    TcpSocketAdapter* socket;
 
     StudentDatabase* database;
 };

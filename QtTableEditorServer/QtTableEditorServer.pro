@@ -21,7 +21,8 @@ SOURCES += main.cpp\
     model/xmlhandler.cpp \
     server/server.cpp \
     window/serverwindow.cpp \
-    server/clientwrapper.cpp
+    server/clientwrapper.cpp \
+    socket/socketadapter.cpp
 
 HEADERS  += \
     model/database.h \
@@ -30,4 +31,5 @@ HEADERS  += \
     model/xmlhandler.h \
     server/server.h \
     window/serverwindow.h \
-    server/clientwrapper.h
+    server/clientwrapper.h \
+    socket/socketadapter.h

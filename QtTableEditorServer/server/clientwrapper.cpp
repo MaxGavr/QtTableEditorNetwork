@@ -1,5 +1,6 @@
 #include "clientwrapper.h"
 #include "../model/database.h"
+#include "../socket/socketadapter.h"
 
 #include <QTcpSocket>
 #include <QHostAddress>
@@ -24,10 +25,12 @@ ThreadableClientWrapper::~ThreadableClientWrapper()
 
 void ThreadableClientWrapper::run()
 {
-    socket = new QTcpSocket();
+    QTcpSocket* sock = new QTcpSocket();
     // error handling needed
-    socket->setSocketDescriptor(socketDescriptor);
-    emit clientConnected(socket->localAddress().toString());
+    sock->setSocketDescriptor(socketDescriptor);
+    socket = new TcpSocketAdapter(sock, this);
+
+    emit clientConnected(socket->getSocket()->localAddress().toString());
 
     database = new StudentDatabase();
 }
@@ -36,6 +39,3 @@ void ThreadableClientWrapper::stop()
 {
 
 }
-
-
-
