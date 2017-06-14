@@ -20,7 +20,8 @@ SOURCES += main.cpp\
     model/student.cpp \
     model/xmlhandler.cpp \
     server/server.cpp \
-    window/serverwindow.cpp
+    window/serverwindow.cpp \
+    server/clientwrapper.cpp
 
 HEADERS  += \
     model/database.h \
@@ -28,4 +29,5 @@ HEADERS  += \
     model/student.h \
     model/xmlhandler.h \
     server/server.h \
-    window/serverwindow.h
+    window/serverwindow.h \
+    server/clientwrapper.h

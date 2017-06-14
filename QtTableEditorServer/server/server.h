@@ -12,8 +12,10 @@ public slots:
     void runServer();
     void stopServer();
 
+    void clientConnected(QString clientAddress) const;
+
 signals:
-    void messageString(QString message);
+    void messageString(QString message) const;
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;
