@@ -4,7 +4,7 @@ SearchStudentDialog::SearchStudentDialog(DatabaseManager *mng, QWidget *parent)
     :QDialog(parent)
 {
     setManager(mng);
-    table = new MultipageTable(getManager()->getDatabase(), this);
+    table = new MultipageTable(this);
     table->enforceEmpty(true);
 
     searchWidget = new StudentSearchWidget(this);

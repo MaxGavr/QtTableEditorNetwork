@@ -22,7 +22,8 @@ SOURCES += main.cpp\
     dialogs/searchdialog.cpp \
     dialogs/searchwidget.cpp \
     dialogs/deletedialog.cpp \
-    socket/socketadapter.cpp
+    socket/socketadapter.cpp \
+    model/searchpattern.cpp
 
 HEADERS  += mainwindow.h \
     model/student.h \

@@ -1,27 +1,28 @@
 #pragma once
 
-#include "../model/database.h"
+class QString;
+class QDate;
+class StudentSearchPattern;
+
+class TcpSocketAdapter;
 
 class DatabaseManager
 {
 
 public:
-    DatabaseManager(StudentDatabase *database);
+    DatabaseManager();
 
-    const StudentDatabase &getDatabase() const;
-    void setDatabase(StudentDatabase *value);
+    bool loadDatabaseFromFile(const QString& fileName);
+    bool saveDatabaseToFile(const QString& fileName);
 
-    bool loadDatabaseFromFile(const QString &fileName);
-    bool saveDatabaseToFile(const QString &fileName);
+    void addStudent(const QString& first, const QString& second, const QString& middle,
+                    const QDate& birth, const QDate& enrollment, const QDate& graduation);
 
-    void addStudent(const QString &first, const QString &second, const QString &middle,
-                    const QDate &birth, const QDate &enrollment, const QDate &graduation);
-
-    void setSearchPattern(const StudentSearchPattern &pattern);
+    void setSearchPattern(const StudentSearchPattern& pattern);
     void resetSearchPattern();
 
-    void deleteStudents(const StudentSearchPattern &pattern);
+    void deleteStudents(const StudentSearchPattern& pattern);
 
 private:
-    StudentDatabase *database;
+    TcpSocketAdapter* m_socket;
 };

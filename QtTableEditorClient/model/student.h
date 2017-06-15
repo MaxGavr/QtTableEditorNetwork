@@ -2,16 +2,23 @@
 
 #include <QString>
 #include <QDate>
+#include <QVector>
 
 class Student
 {
 public:
     using const_ref = const Student&;
+    using StudentSet = QVector<Student>;
 
     enum KEYS {FIRST_NAME = 0, SECOND_NAME, MIDDLE_NAME,
                BIRTH_DATE, ENROLL_DATE, GRADUATE_DATE};
 
     static const QString DATE_FORMAT;
+
+    static QString studentsToString(const Student::StudentSet& students);
+    static Student::StudentSet studentsFromString(const QString& str);
+    static Student fromString(const QString& str);
+    static QString toString(Student::const_ref student);
 
     Student();
     Student(const QString& first, const QString& second, const QString& middle,
@@ -43,6 +50,8 @@ public:
     bool operator!= (const_ref student) const;
 
 private:
+    static const QChar STRING_SEPARATOR;
+
     QString capitalizeString(const QString& str);
 
     QString firstName;

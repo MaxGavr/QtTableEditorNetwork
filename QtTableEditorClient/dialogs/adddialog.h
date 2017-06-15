@@ -13,7 +13,7 @@ class AddStudentDialog : public QDialog
 {
     Q_OBJECT
 public:
-    AddStudentDialog(const StudentDatabase &db, DatabaseManager *mng, QWidget *parent);
+    AddStudentDialog(DatabaseManager *mng, QWidget *parent);
 
     void setManager(DatabaseManager *value);
 
@@ -41,5 +41,4 @@ private:
     QPushButton *cancel;
 
     DatabaseManager *manager;
-    const StudentDatabase &database;
 };

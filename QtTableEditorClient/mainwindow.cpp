@@ -2,8 +2,8 @@
 #include "QMessageBox"
 #include "QFileDialog"
 
-MainWindow::MainWindow(const StudentDatabase &db, DatabaseManager *mng, QWidget *parent)
-    : QMainWindow(parent), database(db)
+MainWindow::MainWindow(DatabaseManager *mng, QWidget *parent)
+    : QMainWindow(parent)
 {
     setManager(mng);
 
@@ -11,7 +11,7 @@ MainWindow::MainWindow(const StudentDatabase &db, DatabaseManager *mng, QWidget 
     createMenus();
     createToolBars();
 
-    table = new MultipageTable(db, this);
+    table = new MultipageTable(this);
     setCentralWidget(table);
     showMaximized();
 }
@@ -93,48 +93,48 @@ void MainWindow::createToolBars()
 
 bool MainWindow::saveConfirmation()
 {
-    int respond = QMessageBox::warning(this, tr("Сохранить файл"),
-                                       tr("Вы хотите сохранить изменения?"),
-                                       QMessageBox::Yes | QMessageBox::No |
-                                       QMessageBox::Cancel);
-    if (respond == QMessageBox::Yes)
-        return saveFile();
-    else if (respond == QMessageBox::Cancel)
-        return false;
-    return true;
+//    int respond = QMessageBox::warning(this, tr("Сохранить файл"),
+//                                       tr("Вы хотите сохранить изменения?"),
+//                                       QMessageBox::Yes | QMessageBox::No |
+//                                       QMessageBox::Cancel);
+//    if (respond == QMessageBox::Yes)
+//        return saveFile();
+//    else if (respond == QMessageBox::Cancel)
+//        return false;
+//    return true;
 }
 
 void MainWindow::openFile()
 {
-    if (saveConfirmation())
-    {
-        QString openFile = QFileDialog::getOpenFileName(this, tr("Открыть файл"),
-                                                        QString(),
-                                                        "Student table (*.xml)");
-        getManager()->loadDatabaseFromFile(openFile);
-        currentFile = openFile;
-    }
+//    if (saveConfirmation())
+//    {
+//        QString openFile = QFileDialog::getOpenFileName(this, tr("Открыть файл"),
+//                                                        QString(),
+//                                                        "Student table (*.xml)");
+//        getManager()->loadDatabaseFromFile(openFile);
+//        currentFile = openFile;
+//    }
 }
 
 bool MainWindow::saveFile()
 {
-    if (currentFile.isEmpty())
-        return saveFileAs();
-    else
-        return getManager()->saveDatabaseToFile(currentFile);
+//    if (currentFile.isEmpty())
+//        return saveFileAs();
+//    else
+//        return getManager()->saveDatabaseToFile(currentFile);
 }
 
 bool MainWindow::saveFileAs()
 {
-    QString fileName = QFileDialog::getSaveFileName(this, tr("Сохранить файл"),
-                                                    "new_table.xml", "Student table (*.xml)");
-    if (!fileName.isEmpty())
-    {
-        currentFile = fileName;
-        return getManager()->saveDatabaseToFile(currentFile);
-    }
-    else
-        return false;
+//    QString fileName = QFileDialog::getSaveFileName(this, tr("Сохранить файл"),
+//                                                    "new_table.xml", "Student table (*.xml)");
+//    if (!fileName.isEmpty())
+//    {
+//        currentFile = fileName;
+//        return getManager()->saveDatabaseToFile(currentFile);
+//    }
+//    else
+//        return false;
 }
 
 DatabaseManager *MainWindow::getManager() const
@@ -149,7 +149,7 @@ void MainWindow::setManager(DatabaseManager *value)
 
 void MainWindow::showAddDialog()
 {
-    AddStudentDialog dialog(database, getManager(), this);
+    AddStudentDialog dialog(getManager(), this);
     dialog.exec();
 }
 
@@ -161,6 +161,6 @@ void MainWindow::showSearchDialog()
 
 void MainWindow::showDeleteDialog()
 {
-    DeleteStudentDialog dialog(database, getManager(), this);
+    DeleteStudentDialog dialog(getManager(), this);
     dialog.exec();
 }

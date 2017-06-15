@@ -6,13 +6,14 @@
 #include <QHeaderView>
 #include <QLineEdit>
 #include <QLabel>
-#include "../model/database.h"
+
+#include "../model/student.h"
 
 class MultipageTable : public QWidget
 {
     Q_OBJECT
 public:
-    MultipageTable(const StudentDatabase &db, QWidget *parent = 0);
+    MultipageTable(QWidget *parent = 0);
 
     enum TableField { Name = 0, BirthDate, EnrollmentDate, GraduationDate };
 
@@ -58,9 +59,7 @@ private:
     QLineEdit *pageSizeInput;
     QLabel *currentPageLabel;
 
-    StudentDatabase::StudentSet students;
-
-    const StudentDatabase &database;
+    Student::StudentSet students;
 
     bool enforcedEmpty;
     int currentPage;

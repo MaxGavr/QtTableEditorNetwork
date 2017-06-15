@@ -1,6 +1,54 @@
 #include "student.h"
 
 const QString Student::DATE_FORMAT = "dd.MM.yyyy";
+const QChar Student::STRING_SEPARATOR = '#';
+
+QString Student::studentsToString(const Student::StudentSet &students)
+{
+    QString result;
+    foreach (const Student& student, students)
+    {
+        result += Student::toString(student) + '|';
+    }
+    result.chop(1);
+    return result;
+}
+
+Student::StudentSet Student::studentsFromString(const QString& str)
+{
+    QStringList list = str.split(QChar('|'));
+    Student::StudentSet students;
+    foreach (const QString& s, list)
+    {
+        students.append(Student::fromString(s));
+    }
+    return students;
+}
+
+QString Student::toString(const_ref student)
+{
+    QString result;
+    result += student.getFirstName() + Student::STRING_SEPARATOR +
+              student.getSecondName() + Student::STRING_SEPARATOR +
+              student.getMiddleName() + Student::STRING_SEPARATOR +
+              student.getBirthDateString() + Student::STRING_SEPARATOR +
+              student.getEnrollmentDateString() + Student::STRING_SEPARATOR +
+              student.getGraduationDateString();
+    return result;
+}
+
+Student Student::fromString(const QString &str)
+{
+    QStringList list = str.split(Student::STRING_SEPARATOR);
+    Student student;
+    student.setFirstName(list[0]);
+    student.setSecondName(list[1]);
+    student.setMiddleName(list[2]);
+    student.setBirthDate(QDate::fromString(list[3], Student::DATE_FORMAT));
+    student.setEnrollmentDate(QDate::fromString(list[4], Student::DATE_FORMAT));
+    student.setGraduationDate(QDate::fromString(list[5], Student::DATE_FORMAT));
+    return student;
+}
 
 Student::Student()
     : Student("---", "---", "---", QDate::currentDate(), QDate::currentDate(), QDate::currentDate())

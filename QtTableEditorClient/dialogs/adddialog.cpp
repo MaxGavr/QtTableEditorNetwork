@@ -11,8 +11,8 @@
 
 #include "adddialog.h"
 
-AddStudentDialog::AddStudentDialog(const StudentDatabase& db, DatabaseManager* mng, QWidget* parent)
-    : QDialog(parent), database(db)
+AddStudentDialog::AddStudentDialog(DatabaseManager* mng, QWidget* parent)
+    : QDialog(parent)
 {
     setManager(mng);
 
@@ -37,8 +37,8 @@ AddStudentDialog::AddStudentDialog(const StudentDatabase& db, DatabaseManager* m
     manageDateSwitcher();
     manageLayouts();
 
-    connect(&database, SIGNAL(invalidInsertion()), this, SLOT(notifyInvalidInput()));
-    connect(&database, SIGNAL(duplicateInsertion()), this, SLOT(notifyDuplication()));
+//    connect(&database, SIGNAL(invalidInsertion()), this, SLOT(notifyInvalidInput()));
+//    connect(&database, SIGNAL(duplicateInsertion()), this, SLOT(notifyDuplication()));
 }
 
 void AddStudentDialog::addStudentToDatabase()

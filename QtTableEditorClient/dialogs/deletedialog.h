@@ -11,7 +11,7 @@ class DeleteStudentDialog : public QDialog
 {
     Q_OBJECT
 public:
-    DeleteStudentDialog(const StudentDatabase &db, DatabaseManager *mng, QWidget *parent);
+    DeleteStudentDialog(DatabaseManager *mng, QWidget *parent);
 
     DatabaseManager *getManager();
     void setManager(DatabaseManager *value);

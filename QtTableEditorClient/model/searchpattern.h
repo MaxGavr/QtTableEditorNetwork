@@ -9,6 +9,8 @@ class StudentSearchPattern
 public:
     using Comparator = std::function <bool (QString)>;
     static const int NUMBER_OF_CRITERIA;
+    static QString toString(const StudentSearchPattern& pattern);
+    static StudentSearchPattern fromString(const QString& str);
 
     StudentSearchPattern();
     StudentSearchPattern(const StudentSearchPattern &pattern);

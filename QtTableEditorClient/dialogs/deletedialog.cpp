@@ -1,7 +1,7 @@
 #include <QMessageBox>
 #include "deletedialog.h"
 
-DeleteStudentDialog::DeleteStudentDialog(const StudentDatabase &db, DatabaseManager *mng, QWidget *parent)
+DeleteStudentDialog::DeleteStudentDialog(DatabaseManager *mng, QWidget *parent)
     : QDialog(parent)
 {
     setManager(mng);
@@ -10,7 +10,7 @@ DeleteStudentDialog::DeleteStudentDialog(const StudentDatabase &db, DatabaseMana
     manageButtons();
     manageLayouts();
 
-    connect(&db, SIGNAL(studentsDeleted(int)), this, SLOT(notifyDeletion(int)));
+    //connect(&db, SIGNAL(studentsDeleted(int)), this, SLOT(notifyDeletion(int)));
 }
 
 DatabaseManager *DeleteStudentDialog::getManager()
@@ -61,6 +61,3 @@ void DeleteStudentDialog::manageLayouts()
 
     setLayout(verticalMain);
 }
-
-
-

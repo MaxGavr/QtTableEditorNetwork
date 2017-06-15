@@ -2,8 +2,8 @@
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
-    : QWidget(parent), database(db)
+MultipageTable::MultipageTable(QWidget *parent)
+    : QWidget(parent)
 {
     initTable();
 
@@ -15,26 +15,26 @@ MultipageTable::MultipageTable(const StudentDatabase &db, QWidget *parent)
 
     enforceEmpty(false);
     getPage();
-    connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
-    connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
-    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(getPage()));
+//    connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
+//    connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
+//    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(getPage()));
 
-    connect(&database, SIGNAL(studentAdded()), this, SLOT(updatePageLabel()));
-    connect(&database, SIGNAL(studentDeleted()), this, SLOT(updatePageLabel()));
-    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(updatePageLabel()));
+//    connect(&database, SIGNAL(studentAdded()), this, SLOT(updatePageLabel()));
+//    connect(&database, SIGNAL(studentDeleted()), this, SLOT(updatePageLabel()));
+//    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(updatePageLabel()));
 }
 
 void MultipageTable::getPage()
 {
-    if (!isEnforcedEmpty())
-    {
-        clearTable();
-        students = database.getSetOfStudents(getCurrentPage(), getStudentsPerPage());
-        foreach (Student::const_ref student, students)
-        {
-            writeStudentInTable(student, students.indexOf(student));
-        }
-    }
+//    if (!isEnforcedEmpty())
+//    {
+//        clearTable();
+//        students = database.getSetOfStudents(getCurrentPage(), getStudentsPerPage());
+//        foreach (Student::const_ref student, students)
+//        {
+//            writeStudentInTable(student, students.indexOf(student));
+//        }
+//    }
 }
 
 void MultipageTable::initTable()
@@ -147,12 +147,12 @@ int MultipageTable::getCurrentPage() const
 
 void MultipageTable::setCurrentPage(int value)
 {
-    if (database.validatePageBounds(value, getStudentsPerPage()))
-    {
-        currentPage = value;
-        getPage();
-    }
-    updatePageLabel();
+//    if (database.validatePageBounds(value, getStudentsPerPage()))
+//    {
+//        currentPage = value;
+//        getPage();
+//    }
+//    updatePageLabel();
 }
 
 int MultipageTable::getStudentsPerPage() const
@@ -216,5 +216,5 @@ int MultipageTable::countStudents() const
 
 int MultipageTable::maxPages() const
 {
-    return database.countPages(studentsPerPage);
+    //return database.countPages(studentsPerPage);
 }

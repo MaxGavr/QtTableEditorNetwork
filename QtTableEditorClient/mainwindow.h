@@ -17,7 +17,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
-    MainWindow(const StudentDatabase &db, DatabaseManager *mng, QWidget *parent = 0);
+    MainWindow(DatabaseManager *mng, QWidget *parent = 0);
     ~MainWindow();
 
     DatabaseManager *getManager() const;
@@ -41,7 +41,6 @@ private:
     MultipageTable *table;
 
     DatabaseManager *manager;
-    const StudentDatabase &database;
 
     QMenu *fileMenu;
     QMenu *editMenu;
