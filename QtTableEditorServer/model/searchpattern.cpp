@@ -51,18 +51,18 @@ StudentSearchPattern::StudentSearchPattern(const StudentSearchPattern &pattern)
     this->graduateDateHigherBound = pattern.graduateDateHigherBound;
 }
 
-QString StudentSearchPattern::toString() const
+QString StudentSearchPattern::toString(const StudentSearchPattern& pattern)
 {
     QString result;
     QChar separator = '#';
     for (int i = 0; i < StudentSearchPattern::NUMBER_OF_CRITERIA; ++i)
     {
-        result += QString::number(criteria[i]) + separator;
+        result += QString::number(pattern.criteria[i]) + separator;
     }
-    result += firstName + separator + secondName + separator + middleName;
-    QList<QDate> dates = {birthDateLowerBound, birthDateHigherBound,
-                          enrollDateLowerBound, enrollDateHigherBound,
-                          graduateDateLowerBound, graduateDateHigherBound};
+    result += pattern.firstName + separator + pattern.secondName + separator + pattern.middleName;
+    QList<QDate> dates = {pattern.birthDateLowerBound, pattern.birthDateHigherBound,
+                          pattern.enrollDateLowerBound, pattern.enrollDateHigherBound,
+                          pattern.graduateDateLowerBound, pattern.graduateDateHigherBound};
     foreach (QDate date, dates)
     {
         result += '#' + date.toString(Student::DATE_FORMAT);
@@ -71,22 +71,25 @@ QString StudentSearchPattern::toString() const
     return result;
 }
 
-void StudentSearchPattern::fromString(const QString &str)
+StudentSearchPattern StudentSearchPattern::fromString(const QString &str)
 {
+    StudentSearchPattern pattern;
     QStringList list = str.split(QChar('#'));
     QStringList::const_iterator it = list.constBegin();
     for (int i = 0; i < StudentSearchPattern::NUMBER_OF_CRITERIA; ++i)
     {
-        criteria[i] = list[i].toInt();
+        pattern.criteria[i] = list[i].toInt();
         ++it;
     }
-    setFirstName(*it++);
-    setSecondName(*it++);
-    setMiddleName(*it++);
+    pattern.setFirstName(*it++);
+    pattern.setSecondName(*it++);
+    pattern.setMiddleName(*it++);
     auto lambda = [&it](){ return QDate::fromString(*it++, Student::DATE_FORMAT); };
-    setBirthDateBounds(lambda(), lambda());
-    setEnrollDateBounds(lambda(), lambda());
-    setGraduateDateBounds(lambda(), lambda());
+    pattern.setBirthDateBounds(lambda(), lambda());
+    pattern.setEnrollDateBounds(lambda(), lambda());
+    pattern.setGraduateDateBounds(lambda(), lambda());
+
+    return pattern;
 }
 
 bool StudentSearchPattern::isEmpty() const
