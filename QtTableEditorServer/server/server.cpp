@@ -53,6 +53,16 @@ void Server::clientDisconnected(const QString &clientAddress, int clientPort)
                        arg(QString::number(clientPort)));
 }
 
+void Server::requestReceived(const QString& request)
+{
+    emit serverMessage(tr("Request received: %1").arg(request));
+}
+
+void Server::responseSent(const QString &response)
+{
+    emit serverMessage(tr("Response sent: %1").arg(response));
+}
+
 void Server::incomingConnection(qintptr socketDescriptor)
 {
     ThreadableClientWrapper* client = new ThreadableClientWrapper(socketDescriptor);
@@ -66,6 +76,8 @@ void Server::incomingConnection(qintptr socketDescriptor)
 
     connect(client, SIGNAL(clientConnected(QString,int)), this, SLOT(clientConnected(QString,int)));
     connect(client, SIGNAL(clientDisconnected(QString,int)), this, SLOT(clientDisconnected(QString,int)));
+    connect(client, SIGNAL(requestReceived(QString)), this, SLOT(requestReceived(QString)));
+    connect(client, SIGNAL(responseSent(QString)), this, SLOT(responseSent(QString)));
 
     clientThread->start();
 }

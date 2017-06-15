@@ -14,6 +14,8 @@ public slots:
 
     void clientConnected(const QString& clientAddress, int clientPort);
     void clientDisconnected(const QString& clientAddress, int clientPort);
+    void requestReceived(const QString& request);
+    void responseSent(const QString& response);
 
 signals:
     void serverMessage(const QString& message);

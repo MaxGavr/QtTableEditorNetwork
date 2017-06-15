@@ -17,6 +17,8 @@ signals:
     void finished();
     void clientConnected(const QString& clientAddress, int clientPort);
     void clientDisconnected(const QString& clientAddress, int clientPort);
+    void requestReceived(const QString& request);
+    void responseSent(const QString& response);
 
 public slots:
     void run();
