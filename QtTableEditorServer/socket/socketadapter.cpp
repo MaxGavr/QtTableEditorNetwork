@@ -4,7 +4,7 @@
 #include <QTcpSocket>
 
 TcpSocketAdapter::TcpSocketAdapter(QTcpSocket* socket, QObject *parent)
-    : QObject(parent), m_socket(socket)
+    : QObject(parent), m_socket(socket), m_nextBlockSize(0)
 {
     connect(m_socket, SIGNAL(readyRead()), this, SLOT(onReadyRead()));
 }
@@ -52,7 +52,7 @@ void TcpSocketAdapter::onReadyRead()
             }
             else
             {
-                // better check REQUESTS enum class type
+                // probably foolish casting
                 int i;
                 stream >> i;
                 requestId = static_cast<TcpSocketAdapter::REQUESTS>(i);

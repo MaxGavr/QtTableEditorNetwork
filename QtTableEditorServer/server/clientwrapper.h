@@ -21,6 +21,13 @@ public slots:
     void run();
     void stop();
 
+    void parseRequest(TcpSocketAdapter::REQUESTS requestId, QString data);
+
+    void databaseUpdated();
+    void studentsDeleted(int amount);
+    void invalidStudentInserted();
+    void duplicateStudentInserted();
+
 private:
     qintptr socketDescriptor;
     TcpSocketAdapter* socket;
