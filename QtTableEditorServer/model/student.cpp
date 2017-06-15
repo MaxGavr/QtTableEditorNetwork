@@ -1,6 +1,7 @@
 #include "student.h"
 
 const QString Student::DATE_FORMAT = "dd.MM.yyyy";
+const QChar Student::STRING_SEPARATOR = '#';
 
 Student::Student()
     : Student("---", "---", "---", QDate::currentDate(), QDate::currentDate(), QDate::currentDate())
@@ -23,6 +24,29 @@ Student::Student(Student::const_ref student)
     : Student(student.getFirstName(), student.getSecondName(), student.getMiddleName(),
               student.getBirthDate(), student.getEnrollmentDate(), student.getGraduationDate())
 {
+}
+
+QString Student::toString() const
+{
+    QString result;
+    result += getFirstName() + Student::STRING_SEPARATOR +
+              getSecondName() + Student::STRING_SEPARATOR +
+              getMiddleName() + Student::STRING_SEPARATOR +
+              getBirthDateString() + Student::STRING_SEPARATOR +
+              getEnrollmentDateString() + Student::STRING_SEPARATOR +
+              getGraduationDateString();
+    return result;
+}
+
+void Student::fromString(const QString &str)
+{
+    QStringList list = str.split(Student::STRING_SEPARATOR);
+    setFirstName(list[0]);
+    setSecondName(list[1]);
+    setMiddleName(list[2]);
+    setBirthDate(QDate::fromString(list[3], Student::DATE_FORMAT));
+    setEnrollmentDate(QDate::fromString(list[4], Student::DATE_FORMAT));
+    setGraduationDate(QDate::fromString(list[5], Student::DATE_FORMAT));
 }
 
 QString Student::getByKey(KEYS key) const

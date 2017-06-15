@@ -18,6 +18,9 @@ public:
             const QDate& birth, const QDate& enrollment, const QDate& graduation);
     Student(const_ref student);
 
+    QString toString() const;
+    void fromString(const QString& str);
+
     QString getByKey(KEYS key) const;
 
     QString getFirstName() const;
@@ -43,6 +46,8 @@ public:
     bool operator!= (const_ref student) const;
 
 private:
+    static const QChar STRING_SEPARATOR;
+
     QString capitalizeString(const QString& str);
 
     QString firstName;

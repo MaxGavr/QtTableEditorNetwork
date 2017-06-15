@@ -13,6 +13,9 @@ public:
     StudentSearchPattern();
     StudentSearchPattern(const StudentSearchPattern &pattern);
 
+    QString toString() const;
+    void fromString(const QString& str);
+
     bool isEmpty() const;
     void reset();
 
