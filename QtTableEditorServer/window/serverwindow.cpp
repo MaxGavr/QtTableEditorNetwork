@@ -30,7 +30,7 @@ ServerWindow::ServerWindow(QWidget *parent)
     server = new Server();
     connect(runServerButton, SIGNAL(clicked(bool)), server, SLOT(runServer()));
     connect(stopServerButton, SIGNAL(clicked(bool)), server, SLOT(stopServer()));
-    connect(server, SIGNAL(messageString(QString)), this, SLOT(showMessage(QString)));
+    connect(server, SIGNAL(serverMessage(QString)), this, SLOT(showMessage(QString)));
 
     showMessage(tr("Welcome!"));
 }

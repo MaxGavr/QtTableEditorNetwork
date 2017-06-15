@@ -30,11 +30,12 @@ void ThreadableClientWrapper::run()
     sock->setSocketDescriptor(socketDescriptor);
     socket = new TcpSocketAdapter(sock, this);
 
-    emit clientConnected(socket->getSocket()->localAddress().toString());
+    emit clientConnected(socket->getSocket()->localAddress().toString(),
+                         socket->getSocket()->localPort());
 
     connect(socket, SIGNAL(requestReceived(TcpSocketAdapter::REQUESTS,QString)),
             this, SLOT(parseRequest(TcpSocketAdapter::REQUESTS,QString)));
-    connect(socket->getSocket(), SIGNAL(disconnected()), this, SLOT(stop()));
+    connect(socket->getSocket(), SIGNAL(disconnected()), this, SLOT(socketDisconnected()));
 
     database = new StudentDatabase();
 
@@ -58,6 +59,13 @@ void ThreadableClientWrapper::stop()
     disconnect(database, SIGNAL(duplicateInsertion()), this, SLOT(duplicateStudentInserted()));
 
     emit finished();
+}
+
+void ThreadableClientWrapper::socketDisconnected()
+{
+    emit clientDisconnected(socket->getSocket()->localAddress().toString(),
+                            socket->getSocket()->localPort());
+    stop();
 }
 
 void ThreadableClientWrapper::parseRequest(TcpSocketAdapter::REQUESTS requestId, QString data)

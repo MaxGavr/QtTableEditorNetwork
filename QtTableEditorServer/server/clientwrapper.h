@@ -15,11 +15,13 @@ public:
 
 signals:
     void finished();
-    void clientConnected(QString clientAddress);
+    void clientConnected(const QString& clientAddress, int clientPort);
+    void clientDisconnected(const QString& clientAddress, int clientPort);
 
 public slots:
     void run();
     void stop();
+    void socketDisconnected();
 
     void parseRequest(TcpSocketAdapter::REQUESTS requestId, QString data);
 
