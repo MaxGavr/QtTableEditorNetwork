@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/">
+        <file>icons/icon_add.png</file>
+        <file>icons/icon_close.png</file>
+        <file>icons/icon_delete.png</file>
+        <file>icons/icon_find.png</file>
+        <file>icons/icon_first_page.png</file>
+        <file>icons/icon_last_page.png</file>
+        <file>icons/icon_next_page.png</file>
+        <file>icons/icon_open_file.png</file>
+        <file>icons/icon_previous_page.png</file>
+        <file>icons/icon_save_as_file.png</file>
+        <file>icons/icon_save_file.png</file>
+    </qresource>
+</RCC>
