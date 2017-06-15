@@ -7,10 +7,8 @@
 #include <QApplication>
 
 #include "manager/manager.h"
-#include "table/table.h"
-#include "dialogs/adddialog.h"
-#include "dialogs/searchdialog.h"
-#include "dialogs/deletedialog.h"
+
+class MultipageTable;
 
 class MainWindow : public QMainWindow
 {
@@ -34,6 +32,7 @@ public slots:
     void showAddDialog();
     void showSearchDialog();
     void showDeleteDialog();
+    void showServerDialog();
 
 private:
     bool saveConfirmation();
@@ -56,5 +55,6 @@ private:
     QAction *addStudentAction;
     QAction *findStudentAction;
     QAction *deleteStudentAction;
+    QAction *connectToServerAction;
     QAction *aboutQtAction;
 };

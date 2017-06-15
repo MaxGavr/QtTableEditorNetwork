@@ -5,10 +5,22 @@
 #include <QString>
 #include <QDate>
 #include <QTcpSocket>
+#include <QHostAddress>
 
 DatabaseManager::DatabaseManager()
 {
     m_socket = new TcpSocketAdapter(new QTcpSocket());
+}
+
+TcpSocketAdapter *DatabaseManager::getSocket()
+{
+    return m_socket;
+}
+
+void DatabaseManager::connectToServer(const QHostAddress& address, int port)
+{
+    m_socket->getSocket()->abort();
+    m_socket->getSocket()->connectToHost(address, port);
 }
 
 bool DatabaseManager::saveDatabaseToFile(const QString &fileName)

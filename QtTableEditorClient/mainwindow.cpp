@@ -1,6 +1,12 @@
 #include "mainwindow.h"
-#include "QMessageBox"
-#include "QFileDialog"
+#include "table/table.h"
+#include "dialogs/adddialog.h"
+#include "dialogs/searchdialog.h"
+#include "dialogs/deletedialog.h"
+#include "dialogs/serverdialog.h"
+
+#include <QMessageBox>
+#include <QFileDialog>
 
 MainWindow::MainWindow(DatabaseManager *mng, QWidget *parent)
     : QMainWindow(parent)
@@ -53,6 +59,11 @@ void MainWindow::createActions()
     deleteStudentAction->setStatusTip(tr("Найти и удалить записи о студентах по заданным критериям"));
     connect(deleteStudentAction, SIGNAL(triggered(bool)), this, SLOT(showDeleteDialog()));
 
+    connectToServerAction = new QAction(tr("Подключиться к серверу"), this);
+    //connectToServerAction->setShortcut();
+    connectToServerAction->setStatusTip(tr("Подключиться к удаленному серверу"));
+    connect(connectToServerAction, SIGNAL(triggered(bool)), this, SLOT(showServerDialog()));
+
     aboutQtAction = new QAction(tr("О Qt"), this);
     aboutQtAction->setStatusTip(tr("Показать справочную информацию о библиотеке Qt"));
     connect(aboutQtAction, SIGNAL(triggered()), qApp, SLOT(aboutQt()));
@@ -69,6 +80,7 @@ void MainWindow::createMenus()
     editMenu->addAction(addStudentAction);
     editMenu->addAction(findStudentAction);
     editMenu->addAction(deleteStudentAction);
+    editMenu->addAction(connectToServerAction);
 
     helpMenu = menuBar()->addMenu(tr("Справка"));
     helpMenu->addAction(aboutQtAction);
@@ -88,6 +100,7 @@ void MainWindow::createToolBars()
     editToolBar->addAction(addStudentAction);
     editToolBar->addAction(findStudentAction);
     editToolBar->addAction(deleteStudentAction);
+    editToolBar->addAction(connectToServerAction);
     addToolBar(Qt::LeftToolBarArea, editToolBar);
 }
 
@@ -162,5 +175,11 @@ void MainWindow::showSearchDialog()
 void MainWindow::showDeleteDialog()
 {
     DeleteStudentDialog dialog(getManager(), this);
+    dialog.exec();
+}
+
+void MainWindow::showServerDialog()
+{
+    ConnectToServerDialog dialog(getManager(), this);
     dialog.exec();
 }

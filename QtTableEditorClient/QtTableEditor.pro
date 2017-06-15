@@ -23,7 +23,8 @@ SOURCES += main.cpp\
     dialogs/searchwidget.cpp \
     dialogs/deletedialog.cpp \
     socket/socketadapter.cpp \
-    model/searchpattern.cpp
+    model/searchpattern.cpp \
+    dialogs/serverdialog.cpp
 
 HEADERS  += mainwindow.h \
     model/student.h \
@@ -34,7 +35,8 @@ HEADERS  += mainwindow.h \
     model/searchpattern.h \
     dialogs/searchwidget.h \
     dialogs/deletedialog.h \
-    socket/socketadapter.h
+    socket/socketadapter.h \
+    dialogs/serverdialog.h
 
 RESOURCES += \
     icons.qrc

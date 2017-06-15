@@ -1,16 +1,23 @@
 #pragma once
 
+#include <QAbstractSocket>
+
+class TcpSocketAdapter;
+
 class QString;
 class QDate;
 class StudentSearchPattern;
-
-class TcpSocketAdapter;
+class QHostAddress;
 
 class DatabaseManager
 {
 
 public:
     DatabaseManager();
+
+    TcpSocketAdapter* getSocket();
+
+    void connectToServer(const QHostAddress& address, int port);
 
     bool loadDatabaseFromFile(const QString& fileName);
     bool saveDatabaseToFile(const QString& fileName);
