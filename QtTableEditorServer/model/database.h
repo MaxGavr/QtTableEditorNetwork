@@ -15,12 +15,10 @@ class StudentDatabase : public QObject
 public:
     friend class XmlHandler;
 
-    using StudentSet = QVector<Student>;
-
     explicit StudentDatabase(QObject *parent = 0);
 
     Student getStudent(int index) const;
-    StudentSet getSetOfStudents(int index, int amount) const;
+    Student::StudentSet getSetOfStudents(int index, int amount) const;
 
     void setSearchPattern(const StudentSearchPattern &pattern);
 
@@ -46,7 +44,7 @@ signals:
     void duplicateInsertion();
 
 private:
-    const StudentSet &getStudents() const;
+    const Student::StudentSet &getStudents() const;
 
     void filterStudents();
     void clearSearchResult();
@@ -54,8 +52,8 @@ private:
 
     StudentSearchPattern pattern;
 
-    StudentSet filteredStudents;
-    StudentSet students;
+    Student::StudentSet filteredStudents;
+    Student::StudentSet students;
 
     XmlHandler xml;
 

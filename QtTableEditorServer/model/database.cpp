@@ -14,10 +14,10 @@ Student StudentDatabase::getStudent(int index) const
     return student;
 }
 
-StudentDatabase::StudentSet StudentDatabase::getSetOfStudents(int index, int amount) const
+Student::StudentSet StudentDatabase::getSetOfStudents(int index, int amount) const
 {
     if (!validatePageBounds(index, amount))
-        return StudentSet();
+        return Student::StudentSet();
 
     int initialPosition = index * amount;
     return getStudents().mid(initialPosition, amount);
@@ -122,7 +122,7 @@ XmlHandler *StudentDatabase::getXmlHandler()
     return &xml;
 }
 
-const StudentDatabase::StudentSet &StudentDatabase::getStudents() const
+const Student::StudentSet &StudentDatabase::getStudents() const
 {
     if (this->pattern.isEmpty())
         return students;
