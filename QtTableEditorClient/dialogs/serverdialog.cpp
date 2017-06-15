@@ -34,6 +34,8 @@ void ConnectToServerDialog::setManager(DatabaseManager *value)
     {
         connect(m_manager->getSocket()->getSocket(), SIGNAL(error(QAbstractSocket::SocketError)),
                 this, SLOT(connectionError(QAbstractSocket::SocketError)));
+        connect(m_manager->getSocket()->getSocket(), SIGNAL(stateChanged(QAbstractSocket::SocketState)),
+                this, SLOT(connectionStateChanged(QAbstractSocket::SocketState)));
     }
 }
 
@@ -50,12 +52,32 @@ void ConnectToServerDialog::connectToServer()
         showMessage(tr("Введен некорректный адрес"));
         return;
     }
-    if (port < 0)
+    if (port < 0 || port > 65535)
     {
         showMessage(tr("Введен некорректный порт"));
         return;
     }
+
     getManager()->connectToServer(address, port);
+}
+
+void ConnectToServerDialog::connectionStateChanged(QAbstractSocket::SocketState socketState)
+{
+    switch (socketState)
+    {
+    case QAbstractSocket::HostLookupState:
+        showMessage(tr("Поиск сервера..."));
+        break;
+    case QAbstractSocket::ConnectingState:
+        showMessage(tr("Сервер найден. Идет подключение..."));
+        break;
+    case QAbstractSocket::ConnectedState:
+        showMessage(tr("Соединение с сервером успешно установлено!"));
+        break;
+    case QAbstractSocket::ClosingState:
+        showMessage(tr("Закрытие соединения..."));
+        break;
+    }
 }
 
 void ConnectToServerDialog::showMessage(const QString &message)
@@ -73,7 +95,7 @@ void ConnectToServerDialog::connectionError(QAbstractSocket::SocketError socketE
         showMessage(tr("Сервер не найден. Проверьте правильность IP-адреса и порта."));
         break;
     case QAbstractSocket::ConnectionRefusedError:
-        showMessage(tr("В соединении отказано"));
+        showMessage(tr("В соединении отказано."));
         break;
     default:
         showMessage(tr("Произошла ошибка: %1").arg(getManager()->getSocket()->getSocket()->errorString()));
@@ -87,13 +109,11 @@ void ConnectToServerDialog::manageInputFields()
     m_addressInput = new QLineEdit();
     // TODO: ip-address validator
     m_addressInput->setInputMask("000.000.000.000;_");
-    //m_addressInput->setPlaceholderText(tr("Введите IP-адрес сервера..."));
 
     m_portLabel = new QLabel(tr("Порт:"));
 
     m_portInput = new QLineEdit();
     m_portInput->setValidator(new QIntValidator());
-    //m_addressInput->setPlaceholderText(tr("Введите порт сервера..."));
 
     m_log = new QPlainTextEdit();
     m_log->setReadOnly(true);

@@ -19,8 +19,10 @@ public:
     void setManager(DatabaseManager *value);
 
 private slots:
-    void connectToServer();
     void showMessage(const QString& message);
+
+    void connectToServer();
+    void connectionStateChanged(QAbstractSocket::SocketState socketState);
     void connectionError(QAbstractSocket::SocketError socketError);
 
 private:
