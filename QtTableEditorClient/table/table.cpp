@@ -5,7 +5,7 @@
 #include <QHBoxLayout>
 
 MultipageTable::MultipageTable(DatabaseManager *manager, QWidget *parent)
-    : QWidget(parent)
+    : QWidget(parent), currentPage(0), incomingPage(0)
 {
     setManager(manager);
 
@@ -15,10 +15,10 @@ MultipageTable::MultipageTable(DatabaseManager *manager, QWidget *parent)
     manageLayouts();
 
     setStudentsPerPage(DEFAULT_STUDENTS_PER_PAGE);
-    goToFirstPage();
+    //goToFirstPage();
 
     enforceEmpty(false);
-    requestPage();
+    //requestPage();
 //    connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
 //    connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
 //    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(getPage()));
@@ -209,7 +209,7 @@ void MultipageTable::setStudentsPerPage(int value)
 {
     studentsPerPage = value;
     pageSizeInput->setText(QString::number(getStudentsPerPage()));
-    goToFirstPage();
+    //goToFirstPage();
 }
 
 void MultipageTable::writeStudentInTable(Student::const_ref student, int row)

@@ -11,5 +11,6 @@
         <file>icons/icon_previous_page.png</file>
         <file>icons/icon_save_as_file.png</file>
         <file>icons/icon_save_file.png</file>
+        <file>icons/icon_connection.png</file>
     </qresource>
 </RCC>

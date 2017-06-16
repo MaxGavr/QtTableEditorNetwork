@@ -59,8 +59,8 @@ void MainWindow::createActions()
     deleteStudentAction->setStatusTip(tr("Найти и удалить записи о студентах по заданным критериям"));
     connect(deleteStudentAction, SIGNAL(triggered(bool)), this, SLOT(showDeleteDialog()));
 
-    connectToServerAction = new QAction(tr("Подключиться к серверу"), this);
-    //connectToServerAction->setShortcut();
+    connectToServerAction = new QAction(QIcon(":/icons/icon_connection.png"), tr("Подключиться к серверу"), this);
+    connectToServerAction->setShortcut(Qt::Key_4);
     connectToServerAction->setStatusTip(tr("Подключиться к удаленному серверу"));
     connect(connectToServerAction, SIGNAL(triggered(bool)), this, SLOT(showServerDialog()));
 
@@ -75,12 +75,13 @@ void MainWindow::createMenus()
     fileMenu->addAction(openFileAction);
     fileMenu->addAction(saveFileAction);
     fileMenu->addAction(saveAsAction);
+    fileMenu->addSeparator();
+    fileMenu->addAction(connectToServerAction);
 
     editMenu = menuBar()->addMenu(tr("Редактировать"));
     editMenu->addAction(addStudentAction);
     editMenu->addAction(findStudentAction);
     editMenu->addAction(deleteStudentAction);
-    editMenu->addAction(connectToServerAction);
 
     helpMenu = menuBar()->addMenu(tr("Справка"));
     helpMenu->addAction(aboutQtAction);
@@ -93,6 +94,8 @@ void MainWindow::createToolBars()
     fileToolBar->addAction(openFileAction);
     fileToolBar->addAction(saveFileAction);
     fileToolBar->addAction(saveAsAction);
+    fileToolBar->addSeparator();
+    fileToolBar->addAction(connectToServerAction);
     addToolBar(fileToolBar);
 
     editToolBar = new QToolBar(tr("Редактировать"));
@@ -100,7 +103,6 @@ void MainWindow::createToolBars()
     editToolBar->addAction(addStudentAction);
     editToolBar->addAction(findStudentAction);
     editToolBar->addAction(deleteStudentAction);
-    editToolBar->addAction(connectToServerAction);
     addToolBar(Qt::LeftToolBarArea, editToolBar);
 }
 
