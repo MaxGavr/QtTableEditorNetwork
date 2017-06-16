@@ -19,6 +19,7 @@ public slots:
 private:
     QPushButton* runServerButton;
     QPushButton* stopServerButton;
+    QPushButton* clearLogButton;
     QPlainTextEdit* log;
 
     Server* server;

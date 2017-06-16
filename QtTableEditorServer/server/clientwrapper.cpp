@@ -75,65 +75,65 @@ void ThreadableClientWrapper::parseRequest(TcpSocketAdapter::REQUESTS requestId,
     {
     case Tcp::REQUESTS::ADD_STUDENT:
     {
-        emit requestReceived(tr("Add student"));
+        emit requestReceived(tr("добавление записи"));
         Student student = Student::fromString(data);
         database->addStudent(student);
         break;
     }
     case Tcp::REQUESTS::SEARCH_STUDENTS:
     {
-        emit requestReceived(tr("Search students"));
+        emit requestReceived(tr("поиск записей"));
         StudentSearchPattern pattern = StudentSearchPattern::fromString(data);
         database->setSearchPattern(pattern);
         break;
     }
     case Tcp::REQUESTS::REMOVE_STUDENTS:
     {
-        emit requestReceived(tr("Remove students"));
+        emit requestReceived(tr("удаление записей"));
         StudentSearchPattern pattern = StudentSearchPattern::fromString(data);
         database->removeStudents(pattern);
         break;
     }
     case Tcp::REQUESTS::GET_PAGE:
     {
-        emit requestReceived(tr("Get page"));
         QStringList numbers = data.split(QChar(' '));
-        Student::StudentSet page = database->getSetOfStudents(numbers[0].toInt(), numbers[1].toInt());
+        emit requestReceived(tr("получение страницы: №%1 (по %2)").arg(numbers[0].toInt()).arg(numbers[1].toInt()));
 
+        Student::StudentSet page = database->getSetOfStudents(numbers[0].toInt(), numbers[1].toInt());
         socket->sendRequest(Tcp::REQUESTS::GET_PAGE, Student::studentsToString(page));
-        emit responseSent(tr("Get page"));
+        emit responseSent(tr("отправка страницы: размер - %1").arg(QString::number(page.size())));
         break;
     }
     case Tcp::REQUESTS::COUNT_PAGES:
     {
-        emit requestReceived(tr("Count pages"));
+        emit requestReceived(tr("подсчет страниц"));
         int studentsPerPage = data.toInt();
         int pages = database->countPages(studentsPerPage);
 
         socket->sendRequest(Tcp::REQUESTS::COUNT_PAGES, QString::number(pages));
-        emit responseSent(tr("Count pages"));
+        emit responseSent(tr("страницы подсчитаны: %1").arg(QString::number(pages)));
         break;
     }
     case Tcp::REQUESTS::VALIDATE_PAGE:
     {
-        emit requestReceived(tr("Validate page"));
+        emit requestReceived(tr("проверка страницы"));
         QStringList numbers = data.split(QChar(' '));
         bool isValidPage = database->validatePageBounds(numbers[0].toInt(), numbers[1].toInt());
 
         socket->sendRequest(Tcp::REQUESTS::VALIDATE_PAGE, isValidPage ? "true" : "false");
-        emit responseSent(tr("Validate page"));
+        emit responseSent(tr("страница проверена: %1").arg(isValidPage ? "true" : "false"));
         break;
     }
     case Tcp::REQUESTS::SAVE_DATABASE:
     {
-        emit requestReceived(tr("Save"));
+        emit requestReceived(tr("сохранение в файл"));
         QString fileName = data;
         database->getXmlHandler()->writeToFile(fileName);
         break;
     }
     case Tcp::REQUESTS::LOAD_DATABASE:
     {
-        emit requestReceived(tr("Load"));
+        emit requestReceived(tr("загрузка из файла"));
         QString fileName = data;
         database->getXmlHandler()->readFromFile(fileName);
         break;
@@ -144,24 +144,24 @@ void ThreadableClientWrapper::parseRequest(TcpSocketAdapter::REQUESTS requestId,
 void ThreadableClientWrapper::databaseUpdated()
 {
     socket->sendRequest(TcpSocketAdapter::REQUESTS::DATABASE_UPDATED);
-    emit responseSent(tr("Database updated"));
+    emit responseSent(tr("список записей обновлен"));
 }
 
 void ThreadableClientWrapper::studentsDeleted(int amount)
 {
     QString data = QString::number(amount);
     socket->sendRequest(TcpSocketAdapter::REQUESTS::STUDENTS_DELETED, data);
-    emit responseSent(tr("Students deleted"));
+    emit responseSent(tr("записи удалены"));
 }
 
 void ThreadableClientWrapper::invalidStudentInserted()
 {
     socket->sendRequest(TcpSocketAdapter::REQUESTS::INVALID_INSERTION);
-    emit responseSent(tr("Invalid insertion"));
+    emit responseSent(tr("добавление некорректной записи"));
 }
 
 void ThreadableClientWrapper::duplicateStudentInserted()
 {
     socket->sendRequest(TcpSocketAdapter::REQUESTS::DUPLICATE_INSERTION);
-    emit responseSent(tr("Duplicate insertion"));
+    emit responseSent(tr("повторное добавление записи"));
 }

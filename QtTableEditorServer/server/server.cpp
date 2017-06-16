@@ -20,12 +20,12 @@ void Server::runServer()
         {
             if (!listen(ipAddress))
             {
-                emit serverMessage(tr("Unable to start server: %1").arg(errorString()));
+                emit serverMessage(tr("Невозможно запустить сервер: %1").arg(errorString()));
                 stopServer();
             }
             else
             {
-                emit serverMessage(tr("Server started successfully. Address: %1. Port: %2")
+                emit serverMessage(tr("Сервер успешно запущен по адресу: %1:%2")
                                    .arg(serverAddress().toString())
                                    .arg(QString::number(serverPort())));
             }
@@ -36,31 +36,31 @@ void Server::runServer()
 void Server::stopServer()
 {
     close();
-    emit serverMessage(tr("Server stopped successfully."));
+    emit serverMessage(tr("Сервер успешно остановлен"));
 }
 
 void Server::clientConnected(const QString &clientAddress, int clientPort)
 {
-    emit serverMessage(tr("Client connected: %1:%2")
+    emit serverMessage(tr("Клиент подключился: %1:%2")
                        .arg(clientAddress)
                        .arg(QString::number(clientPort)));
 }
 
 void Server::clientDisconnected(const QString &clientAddress, int clientPort)
 {
-    emit serverMessage(tr("Client disconnected: %1:%2").
+    emit serverMessage(tr("Клиент отключился: %1:%2").
                        arg(clientAddress).
                        arg(QString::number(clientPort)));
 }
 
 void Server::requestReceived(const QString& request)
 {
-    emit serverMessage(tr("Request received: %1").arg(request));
+    emit serverMessage(tr("Получен запрос: %1").arg(request));
 }
 
 void Server::responseSent(const QString &response)
 {
-    emit serverMessage(tr("Response sent: %1").arg(response));
+    emit serverMessage(tr("Отправлен ответ: %1").arg(response));
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)

@@ -9,9 +9,10 @@
 ServerWindow::ServerWindow(QWidget *parent)
     : QWidget(parent)
 {
-    runServerButton = new QPushButton(tr("Run server"));
+    runServerButton = new QPushButton(tr("Запустить"));
     runServerButton->setDefault(true);
-    stopServerButton = new QPushButton(tr("Stop server"));
+    stopServerButton = new QPushButton(tr("Остановить"));
+    clearLogButton = new QPushButton(tr("Очистить лог"));
 
     log = new QPlainTextEdit();
     log->setReadOnly(true);
@@ -24,6 +25,7 @@ ServerWindow::ServerWindow(QWidget *parent)
 
     mainLayout->addLayout(buttonsLayout);
     mainLayout->addWidget(log);
+    mainLayout->addWidget(clearLogButton);
 
     setLayout(mainLayout);
 
@@ -31,14 +33,12 @@ ServerWindow::ServerWindow(QWidget *parent)
     connect(runServerButton, SIGNAL(clicked(bool)), server, SLOT(runServer()));
     connect(stopServerButton, SIGNAL(clicked(bool)), server, SLOT(stopServer()));
     connect(server, SIGNAL(serverMessage(QString)), this, SLOT(showMessage(QString)));
+    connect(clearLogButton, SIGNAL(clicked(bool)), log, SLOT(clear()));
 
-    showMessage(tr("Welcome!"));
+    showMessage(tr("Добро пожаловать!"));
 }
 
 void ServerWindow::showMessage(QString message)
 {
     log->appendPlainText(message);
 }
-
-
-
