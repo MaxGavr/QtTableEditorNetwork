@@ -14,6 +14,7 @@ void TcpSocketAdapter::sendRequest(TcpSocketAdapter::REQUESTS requestId, QString
 {
     QByteArray dataBlock;
     QDataStream stream(&dataBlock, QIODevice::ReadWrite);
+    stream.setVersion(QDataStream::Qt_4_0);
 
     stream << quint16(0);
     stream << requestId << data;
