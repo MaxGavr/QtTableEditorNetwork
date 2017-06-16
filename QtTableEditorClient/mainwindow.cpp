@@ -17,7 +17,7 @@ MainWindow::MainWindow(DatabaseManager *mng, QWidget *parent)
     createMenus();
     createToolBars();
 
-    table = new MultipageTable(this);
+    table = new MultipageTable(mng, this);
     setCentralWidget(table);
     showMaximized();
 }

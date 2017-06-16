@@ -1,15 +1,18 @@
 #include "manager.h"
 #include "../model/searchpattern.h"
-#include "../socket/socketadapter.h"
 
 #include <QString>
 #include <QDate>
 #include <QTcpSocket>
 #include <QHostAddress>
 
-DatabaseManager::DatabaseManager()
+DatabaseManager::DatabaseManager(QObject *parent)
+    : QObject(parent)
 {
     m_socket = new TcpSocketAdapter(new QTcpSocket());
+
+    connect(m_socket, SIGNAL(requestReceived(TcpSocketAdapter::REQUESTS,QString)),
+            this, SLOT(parseRequest(TcpSocketAdapter::REQUESTS,QString)));
 }
 
 TcpSocketAdapter *DatabaseManager::getSocket()
@@ -36,7 +39,25 @@ bool DatabaseManager::loadDatabaseFromFile(const QString &fileName)
 void DatabaseManager::addStudent(const QString &first, const QString &second, const QString &middle,
                                  const QDate &birth, const QDate &enrollment, const QDate &graduation)
 {
-    //database->addStudent(Student(first, second, middle, birth, enrollment, graduation));
+    Student student(first, second, middle, birth, enrollment, graduation);
+    getSocket()->sendRequest(TcpSocketAdapter::ADD_STUDENT, Student::toString(student));
+}
+
+void DatabaseManager::getPage(int index, int studentsPerPage)
+{
+    QString data = QString::number(index) + ' ' + QString::number(studentsPerPage);
+    getSocket()->sendRequest(TcpSocketAdapter::GET_PAGE, data);
+}
+
+void DatabaseManager::countPages(int studentsPerPage)
+{
+    getSocket()->sendRequest(TcpSocketAdapter::COUNT_PAGES, QString::number(studentsPerPage));
+}
+
+void DatabaseManager::validatePageBounds(int index, int studentsPerPage)
+{
+    QString data = QString::number(index) + ' ' + QString::number(studentsPerPage);
+    getSocket()->sendRequest(TcpSocketAdapter::VALIDATE_PAGE, data);
 }
 
 void DatabaseManager::setSearchPattern(const StudentSearchPattern &pattern)
@@ -47,6 +68,44 @@ void DatabaseManager::setSearchPattern(const StudentSearchPattern &pattern)
 void DatabaseManager::deleteStudents(const StudentSearchPattern &pattern)
 {
     //database->removeStudents(pattern);
+}
+
+void DatabaseManager::parseRequest(TcpSocketAdapter::REQUESTS requestId, const QString &data)
+{
+    switch (requestId)
+    {
+    case TcpSocketAdapter::DATABASE_UPDATED:
+    {
+        emit databaseUpdated();
+        break;
+    }
+    case TcpSocketAdapter::GET_PAGE:
+    {
+        Student::StudentSet students = Student::studentsFromString(data);
+        emit pageRetrieved(students);
+        break;
+    }
+    case TcpSocketAdapter::INVALID_INSERTION:
+    {
+        emit invalidStudentInserted();
+        break;
+    }
+    case TcpSocketAdapter::DUPLICATE_INSERTION:
+    {
+        emit duplicateStudentInserted();
+        break;
+    }
+    case TcpSocketAdapter::COUNT_PAGES:
+    {
+        emit pageCounted(data.toInt());
+        break;
+    }
+    case TcpSocketAdapter::VALIDATE_PAGE:
+    {
+        emit pageValidated("true" == data ? true : false);
+        break;
+    }
+    }
 }
 
 void DatabaseManager::resetSearchPattern()

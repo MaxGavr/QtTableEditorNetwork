@@ -9,11 +9,13 @@
 
 #include "../model/student.h"
 
+class DatabaseManager;
+
 class MultipageTable : public QWidget
 {
     Q_OBJECT
 public:
-    MultipageTable(QWidget *parent = 0);
+    MultipageTable(DatabaseManager* manager, QWidget *parent = 0);
 
     enum TableField { Name = 0, BirthDate, EnrollmentDate, GraduationDate };
 
@@ -25,17 +27,25 @@ public:
     bool isEmpty() const;
 
     int countStudents() const;
-    int maxPages() const;
 
     int getStudentsPerPage() const;
     void setStudentsPerPage(int value);
 
     int getCurrentPage() const;
-    void setCurrentPage(int value);
+
+    DatabaseManager *getManager() const;
+    void setManager(DatabaseManager *manager);
 
 public slots:
-    void getPage();
-    void updatePageLabel();
+    void requestPage();
+    void receivePage(Student::StudentSet page);
+
+    void requestPageLabelUpdate();
+    void updatePageLabel(int pageCount);
+
+    void requestPageChange(int pageIndex);
+    void setCurrentPage(bool isPageValid);
+
     void updateStudentsPerPage();
 
     void goToFirstPage();
@@ -51,6 +61,8 @@ private:
 
     void createPageControl();
 
+    DatabaseManager* m_manager;
+
     QTableWidget *table;
     QPushButton *nextPageButton;
     QPushButton *prevPageButton;
@@ -59,10 +71,11 @@ private:
     QLineEdit *pageSizeInput;
     QLabel *currentPageLabel;
 
-    Student::StudentSet students;
+    Student::StudentSet m_students;
 
     bool enforcedEmpty;
     int currentPage;
+    int incomingPage;
     int studentsPerPage;
     const int DEFAULT_STUDENTS_PER_PAGE = 10;
     const int TOTAL_COLUMNS = 4;

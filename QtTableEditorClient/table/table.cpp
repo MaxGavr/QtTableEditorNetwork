@@ -1,10 +1,14 @@
 #include "table.h"
+#include "../manager/manager.h"
+
 #include <QVBoxLayout>
 #include <QHBoxLayout>
 
-MultipageTable::MultipageTable(QWidget *parent)
+MultipageTable::MultipageTable(DatabaseManager *manager, QWidget *parent)
     : QWidget(parent)
 {
+    setManager(manager);
+
     initTable();
 
     createPageControl();
@@ -14,7 +18,7 @@ MultipageTable::MultipageTable(QWidget *parent)
     goToFirstPage();
 
     enforceEmpty(false);
-    getPage();
+    requestPage();
 //    connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
 //    connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
 //    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(getPage()));
@@ -24,17 +28,44 @@ MultipageTable::MultipageTable(QWidget *parent)
 //    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(updatePageLabel()));
 }
 
-void MultipageTable::getPage()
+void MultipageTable::requestPage()
 {
-//    if (!isEnforcedEmpty())
-//    {
-//        clearTable();
-//        students = database.getSetOfStudents(getCurrentPage(), getStudentsPerPage());
-//        foreach (Student::const_ref student, students)
-//        {
-//            writeStudentInTable(student, students.indexOf(student));
-//        }
-//    }
+    connect(m_manager, SIGNAL(pageRetrieved(Student::StudentSet)),
+            this, SLOT(receivePage(Student::StudentSet)));
+    getManager()->getPage(getCurrentPage(), getStudentsPerPage());
+}
+
+void MultipageTable::receivePage(Student::StudentSet page)
+{
+    disconnect(m_manager, SIGNAL(pageRetrieved(Student::StudentSet)),
+               this, SLOT(receivePage(Student::StudentSet)));
+    if (!isEnforcedEmpty())
+    {
+        clearTable();
+        m_students = page;
+        foreach (Student::const_ref student, m_students)
+        {
+            writeStudentInTable(student, m_students.indexOf(student));
+        }
+    }
+}
+
+void MultipageTable::requestPageLabelUpdate()
+{
+    connect(m_manager, SIGNAL(pageCounted(int)), this, SLOT(updatePageLabel(int)));
+    getManager()->countPages(getStudentsPerPage());
+}
+
+void MultipageTable::updatePageLabel(int pageCount)
+{
+    disconnect(m_manager, SIGNAL(pageCounted(int)), this, SLOT(updatePageLabel(int)));
+    if (!isEmpty())
+    {
+        QString text = QString::number(getCurrentPage() + 1) + "/" + QString::number(pageCount);
+        currentPageLabel->setText(text);
+    }
+    else
+        currentPageLabel->setText("/");
 }
 
 void MultipageTable::initTable()
@@ -96,15 +127,38 @@ void MultipageTable::createPageControl()
     currentPageLabel->setAlignment(Qt::AlignCenter);
 }
 
-void MultipageTable::updatePageLabel()
+DatabaseManager *MultipageTable::getManager() const
 {
-    if (!isEmpty())
+    return m_manager;
+}
+
+void MultipageTable::setManager(DatabaseManager *manager)
+{
+    m_manager = manager;
+    if (m_manager)
     {
-        QString text = QString::number(getCurrentPage() + 1) + "/" + QString::number(maxPages());
-        currentPageLabel->setText(text);
+        connect(m_manager, SIGNAL(databaseUpdated()), this, SLOT(requestPage()));
+        connect(m_manager, SIGNAL(pageRetrieved(Student::StudentSet)), this, SLOT(requestPageLabelUpdate()));
     }
-    else
-        currentPageLabel->setText("/");
+}
+
+void MultipageTable::requestPageChange(int pageIndex)
+{
+    incomingPage = pageIndex;
+    connect(m_manager, SIGNAL(pageValidated(bool)), this, SLOT(setCurrentPage(bool)));
+    getManager()->validatePageBounds(pageIndex, getStudentsPerPage());
+}
+
+void MultipageTable::setCurrentPage(bool isPageValid)
+{
+    disconnect(m_manager, SIGNAL(pageValidated(bool)), this, SLOT(setCurrentPage(bool)));
+    disconnect(m_manager, SIGNAL(pageCounted(int)), this, SLOT(requestPageChange(int)));
+    if (isPageValid)
+    {
+        currentPage = incomingPage;
+        requestPage();
+    }
+    requestPageLabelUpdate();
 }
 
 void MultipageTable::updateStudentsPerPage()
@@ -114,24 +168,25 @@ void MultipageTable::updateStudentsPerPage()
 
 void MultipageTable::goToFirstPage()
 {
-    setCurrentPage(0);
+    requestPageChange(0);
 }
 
 void MultipageTable::goToLastPage()
 {
-    setCurrentPage(maxPages() - 1);
+    connect(m_manager, SIGNAL(pageCounted(int)), this, SLOT(requestPageChange(int)));
+    getManager()->countPages(getStudentsPerPage());
+    //requestPageChange(maxPages() - 1);
 }
 
 void MultipageTable::goToPreviousPage()
 {
     if (getCurrentPage() - 1 >= 0)
-        setCurrentPage(getCurrentPage() - 1);
+        requestPageChange(getCurrentPage() - 1);
 }
 
 void MultipageTable::goToNextPage()
 {
-    if (getCurrentPage() + 1 < maxPages())
-        setCurrentPage(getCurrentPage() + 1);
+    requestPageChange(getCurrentPage() + 1);
 }
 
 void MultipageTable::fitTableToContents()
@@ -143,16 +198,6 @@ void MultipageTable::fitTableToContents()
 int MultipageTable::getCurrentPage() const
 {
     return currentPage;
-}
-
-void MultipageTable::setCurrentPage(int value)
-{
-//    if (database.validatePageBounds(value, getStudentsPerPage()))
-//    {
-//        currentPage = value;
-//        getPage();
-//    }
-//    updatePageLabel();
 }
 
 int MultipageTable::getStudentsPerPage() const
@@ -187,7 +232,7 @@ void MultipageTable::writeStudentInTable(Student::const_ref student, int row)
 
 void MultipageTable::clearTable()
 {
-    students.clear();
+    m_students.clear();
     table->clearContents();
     table->setRowCount(0);
 }
@@ -211,10 +256,5 @@ bool MultipageTable::isEmpty() const
 
 int MultipageTable::countStudents() const
 {
-    return students.count();
-}
-
-int MultipageTable::maxPages() const
-{
-    //return database.countPages(studentsPerPage);
+    return m_students.count();
 }

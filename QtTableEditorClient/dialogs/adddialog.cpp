@@ -37,8 +37,8 @@ AddStudentDialog::AddStudentDialog(DatabaseManager* mng, QWidget* parent)
     manageDateSwitcher();
     manageLayouts();
 
-//    connect(&database, SIGNAL(invalidInsertion()), this, SLOT(notifyInvalidInput()));
-//    connect(&database, SIGNAL(duplicateInsertion()), this, SLOT(notifyDuplication()));
+    connect(manager, SIGNAL(invalidStudentInserted()), this, SLOT(notifyInvalidInput()));
+    connect(manager, SIGNAL(duplicateStudentInserted()), this, SLOT(notifyDuplication()));
 }
 
 void AddStudentDialog::addStudentToDatabase()
