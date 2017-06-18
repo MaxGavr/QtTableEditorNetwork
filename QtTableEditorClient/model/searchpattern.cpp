@@ -65,7 +65,7 @@ QString StudentSearchPattern::toString(const StudentSearchPattern& pattern)
                           pattern.graduateDateLowerBound, pattern.graduateDateHigherBound};
     foreach (QDate date, dates)
     {
-        result += '#' + date.toString(Student::DATE_FORMAT);
+        result += separator + date.toString(Student::DATE_FORMAT);
     }
 
     return result;
@@ -81,13 +81,18 @@ StudentSearchPattern StudentSearchPattern::fromString(const QString &str)
         pattern.criteria[i] = list[i].toInt();
         ++it;
     }
-    pattern.setFirstName(*it++);
-    pattern.setSecondName(*it++);
-    pattern.setMiddleName(*it++);
+    pattern.firstName = *it++;
+    pattern.secondName = *it++;
+    pattern.middleName = *it++;
+
     auto lambda = [&it](){ return QDate::fromString(*it++, Student::DATE_FORMAT); };
-    pattern.setBirthDateBounds(lambda(), lambda());
-    pattern.setEnrollDateBounds(lambda(), lambda());
-    pattern.setGraduateDateBounds(lambda(), lambda());
+
+    pattern.birthDateLowerBound = lambda();
+    pattern.birthDateHigherBound = lambda();
+    pattern.enrollDateLowerBound = lambda();
+    pattern.enrollDateHigherBound = lambda();
+    pattern.graduateDateLowerBound = lambda();
+    pattern.graduateDateHigherBound = lambda();
 
     return pattern;
 }
