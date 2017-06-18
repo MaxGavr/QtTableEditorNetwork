@@ -19,13 +19,6 @@ MultipageTable::MultipageTable(DatabaseManager *manager, QWidget *parent)
 
     enforceEmpty(false);
     //requestPage();
-//    connect(&database, SIGNAL(studentAdded()), this, SLOT(getPage()));
-//    connect(&database, SIGNAL(studentDeleted()), this, SLOT(getPage()));
-//    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(getPage()));
-
-//    connect(&database, SIGNAL(studentAdded()), this, SLOT(updatePageLabel()));
-//    connect(&database, SIGNAL(studentDeleted()), this, SLOT(updatePageLabel()));
-//    connect(&database, SIGNAL(studentsDeleted(int)), this, SLOT(updatePageLabel()));
 }
 
 void MultipageTable::requestPage()
@@ -37,6 +30,7 @@ void MultipageTable::requestPage()
 
 void MultipageTable::receivePage(Student::StudentSet page)
 {
+    requestPageLabelUpdate();
     disconnect(m_manager, SIGNAL(pageRetrieved(Student::StudentSet)),
                this, SLOT(receivePage(Student::StudentSet)));
     if (!isEnforcedEmpty())
@@ -138,7 +132,6 @@ void MultipageTable::setManager(DatabaseManager *manager)
     if (m_manager)
     {
         connect(m_manager, SIGNAL(databaseUpdated()), this, SLOT(requestPage()));
-        connect(m_manager, SIGNAL(pageRetrieved(Student::StudentSet)), this, SLOT(requestPageLabelUpdate()));
     }
 }
 
@@ -158,12 +151,13 @@ void MultipageTable::setCurrentPage(bool isPageValid)
         currentPage = incomingPage;
         requestPage();
     }
-    requestPageLabelUpdate();
+    //requestPageLabelUpdate();
 }
 
 void MultipageTable::updateStudentsPerPage()
 {
     setStudentsPerPage(pageSizeInput->text().toInt());
+    goToFirstPage();
 }
 
 void MultipageTable::goToFirstPage()
@@ -209,7 +203,6 @@ void MultipageTable::setStudentsPerPage(int value)
 {
     studentsPerPage = value;
     pageSizeInput->setText(QString::number(getStudentsPerPage()));
-    goToFirstPage();
 }
 
 void MultipageTable::writeStudentInTable(Student::const_ref student, int row)
