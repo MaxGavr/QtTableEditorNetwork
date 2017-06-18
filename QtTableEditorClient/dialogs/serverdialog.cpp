@@ -52,7 +52,7 @@ void ConnectToServerDialog::connectToServer()
         showMessage(tr("Введен некорректный адрес"));
         return;
     }
-    if (port < 0 || port > 65535)
+    if (0 == port)
     {
         showMessage(tr("Введен некорректный порт"));
         return;
@@ -107,13 +107,17 @@ void ConnectToServerDialog::manageInputFields()
     m_addressLabel = new QLabel(tr("IP-адрес:"));
 
     m_addressInput = new QLineEdit();
-    // TODO: ip-address validator
+
+    QString ipRange = "(?:[0-1_]?[0-9_]?[0-9_]|2[0-4_][0-9_]|25[0-5_])";
+    QRegExp ipRegex ("^" + ipRange + "\\." + ipRange + "\\." + ipRange + "\\." + ipRange + "$");
+    QRegExpValidator *ipValidator = new QRegExpValidator(ipRegex, this);
+    m_addressInput->setValidator(ipValidator);
     m_addressInput->setInputMask("000.000.000.000;_");
 
     m_portLabel = new QLabel(tr("Порт:"));
 
     m_portInput = new QLineEdit();
-    m_portInput->setValidator(new QIntValidator());
+    m_portInput->setValidator(new QIntValidator(1, 65535));
 
     m_log = new QPlainTextEdit();
     m_log->setReadOnly(true);
