@@ -13,6 +13,8 @@ const QString XmlHandler::XML_TAG_BIRTH_DATE = "birth";
 const QString XmlHandler::XML_TAG_ENROLL_DATE = "enrollment";
 const QString XmlHandler::XML_TAG_GRADUATE_DATE = "graduation";
 
+const QString XmlHandler::FILE_FORMAT = ".xml";
+
 
 XmlHandler::XmlHandler(StudentDatabase *db)
 {
@@ -20,8 +22,13 @@ XmlHandler::XmlHandler(StudentDatabase *db)
 }
 
 
-bool XmlHandler::readFromFile(const QString &fileName)
+bool XmlHandler::readFromFile(QString fileName)
 {
+    if (!fileName.endsWith(XmlHandler::FILE_FORMAT))
+    {
+        fileName.append(XmlHandler::FILE_FORMAT);
+    }
+
     QFile file(fileName);
     if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
         return false;
@@ -62,7 +69,7 @@ bool XmlHandler::readFromFile(const QString &fileName)
     return true;
 }
 
-bool XmlHandler::writeToFile(const QString &fileName)
+bool XmlHandler::writeToFile(QString fileName)
 {
     QDomDocument doc("students");
     QDomElement rootElement = doc.createElement(XML_TAG_STUDENTS);
@@ -73,6 +80,10 @@ bool XmlHandler::writeToFile(const QString &fileName)
         rootElement.appendChild(writeStudent(doc, student));
     }
 
+    if (!fileName.endsWith(XmlHandler::FILE_FORMAT))
+    {
+        fileName.append(XmlHandler::FILE_FORMAT);
+    }
     QFile file(fileName);
     if (!file.open(QIODevice::WriteOnly))
         return false;

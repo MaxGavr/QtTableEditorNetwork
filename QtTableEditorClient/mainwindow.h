@@ -27,8 +27,8 @@ public:
 
 public slots:
     void openFile();
-    bool saveFile();
-    bool saveFileAs();
+    void saveFile();
+    void saveFileAs();
     void showAddDialog();
     void showSearchDialog();
     void showDeleteDialog();

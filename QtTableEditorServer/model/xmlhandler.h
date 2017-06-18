@@ -10,10 +10,12 @@ class Student;
 class XmlHandler
 {
 public:
+    static const QString FILE_FORMAT;
+
     XmlHandler(StudentDatabase *db);
 
-    bool readFromFile(const QString& fileName);
-    bool writeToFile(const QString& fileName);
+    bool readFromFile(QString fileName);
+    bool writeToFile(QString fileName);
 
 private:
     QDomElement writeStudent(QDomDocument &doc, const Student &student);

@@ -56,10 +56,16 @@ void StudentDatabase::addStudent(Student student, bool notify)
                 emit studentAdded();
         }
         else
-            emit invalidInsertion();
+        {
+            if (notify)
+                emit invalidInsertion();
+        }
     }
     else
-        emit duplicateInsertion();
+    {
+        if (notify)
+            emit duplicateInsertion();
+    }
 }
 
 bool StudentDatabase::removeStudent(Student::const_ref student, bool notify)
@@ -133,7 +139,7 @@ const Student::StudentSet &StudentDatabase::getStudents() const
 void StudentDatabase::clear()
 {
     foreach (Student::const_ref student, students)
-        removeStudent(student);
+        removeStudent(student, false);
 }
 
 bool StudentDatabase::validatePageBounds(int pageIndex, int studentsPerPage) const
@@ -147,5 +153,3 @@ bool StudentDatabase::isEmpty() const
 {
     return countStudents() == 0;
 }
-
-

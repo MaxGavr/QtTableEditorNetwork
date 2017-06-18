@@ -126,15 +126,15 @@ void ThreadableClientWrapper::parseRequest(TcpSocketAdapter::REQUESTS requestId,
     }
     case Tcp::REQUESTS::SAVE_DATABASE:
     {
-        emit requestReceived(tr("сохранение в файл"));
         QString fileName = data;
+        emit requestReceived(tr("сохранение в файл: %1").arg(fileName));
         database->getXmlHandler()->writeToFile(fileName);
         break;
     }
     case Tcp::REQUESTS::LOAD_DATABASE:
     {
-        emit requestReceived(tr("загрузка из файла"));
         QString fileName = data;
+        emit requestReceived(tr("загрузка из файла: %1").arg(fileName));
         database->getXmlHandler()->readFromFile(fileName);
         break;
     }

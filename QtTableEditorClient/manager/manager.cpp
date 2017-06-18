@@ -10,7 +10,6 @@ DatabaseManager::DatabaseManager(QObject *parent)
     : QObject(parent)
 {
     m_socket = new TcpSocketAdapter(new QTcpSocket());
-
     connect(m_socket, SIGNAL(requestReceived(TcpSocketAdapter::REQUESTS,QString)),
             this, SLOT(parseRequest(TcpSocketAdapter::REQUESTS,QString)));
 }
@@ -28,12 +27,12 @@ void DatabaseManager::connectToServer(const QHostAddress& address, int port)
 
 bool DatabaseManager::saveDatabaseToFile(const QString &fileName)
 {
-    //return database->getXmlHandler()->writeToFile(fileName);
+    getSocket()->sendRequest(TcpSocketAdapter::SAVE_DATABASE, fileName);
 }
 
 bool DatabaseManager::loadDatabaseFromFile(const QString &fileName)
 {
-    //return database->getXmlHandler()->readFromFile(fileName);
+    getSocket()->sendRequest(TcpSocketAdapter::LOAD_DATABASE, fileName);
 }
 
 void DatabaseManager::addStudent(const QString &first, const QString &second, const QString &middle,

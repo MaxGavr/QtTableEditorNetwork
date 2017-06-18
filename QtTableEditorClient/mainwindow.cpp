@@ -6,7 +6,7 @@
 #include "dialogs/serverdialog.h"
 
 #include <QMessageBox>
-#include <QFileDialog>
+#include <QInputDialog>
 
 MainWindow::MainWindow(DatabaseManager *mng, QWidget *parent)
     : QMainWindow(parent)
@@ -123,33 +123,46 @@ void MainWindow::openFile()
 {
 //    if (saveConfirmation())
 //    {
-//        QString openFile = QFileDialog::getOpenFileName(this, tr("Открыть файл"),
-//                                                        QString(),
-//                                                        "Student table (*.xml)");
-//        getManager()->loadDatabaseFromFile(openFile);
-//        currentFile = openFile;
+    bool ok;
+    QString fileName = QInputDialog::getText(this,
+                                             tr("Загрузка"),
+                                             tr("Введите имя файла для загрузки:"),
+                                             QLineEdit::Normal,
+                                             QString(),
+                                             &ok);
+    if (ok && !fileName.isEmpty())
+    {
+        getManager()->loadDatabaseFromFile(fileName);
+    }
+    currentFile = fileName;
 //    }
 }
 
-bool MainWindow::saveFile()
+void MainWindow::saveFile()
 {
-//    if (currentFile.isEmpty())
-//        return saveFileAs();
-//    else
-//        return getManager()->saveDatabaseToFile(currentFile);
+    if (currentFile.isEmpty())
+        saveFileAs();
+    else
+        getManager()->saveDatabaseToFile(currentFile);
 }
 
-bool MainWindow::saveFileAs()
+void MainWindow::saveFileAs()
 {
-//    QString fileName = QFileDialog::getSaveFileName(this, tr("Сохранить файл"),
-//                                                    "new_table.xml", "Student table (*.xml)");
-//    if (!fileName.isEmpty())
-//    {
-//        currentFile = fileName;
-//        return getManager()->saveDatabaseToFile(currentFile);
-//    }
-//    else
-//        return false;
+    bool ok;
+    QString fileName = QInputDialog::getText(this,
+                                             tr("Сохранение"),
+                                             tr("Введите имя файла для сохранения:"),
+                                             QLineEdit::Normal,
+                                             tr("new_file"),
+                                             &ok);
+    if (ok)
+    {
+        currentFile = fileName;
+        if (!fileName.isEmpty())
+        {
+            getManager()->saveDatabaseToFile(currentFile);
+        }
+    }
 }
 
 DatabaseManager *MainWindow::getManager() const

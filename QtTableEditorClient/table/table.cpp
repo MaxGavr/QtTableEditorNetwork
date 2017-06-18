@@ -209,7 +209,7 @@ void MultipageTable::setStudentsPerPage(int value)
 {
     studentsPerPage = value;
     pageSizeInput->setText(QString::number(getStudentsPerPage()));
-    //goToFirstPage();
+    goToFirstPage();
 }
 
 void MultipageTable::writeStudentInTable(Student::const_ref student, int row)
