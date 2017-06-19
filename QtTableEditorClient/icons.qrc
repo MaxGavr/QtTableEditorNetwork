@@ -12,5 +12,6 @@
         <file>icons/icon_save_as_file.png</file>
         <file>icons/icon_save_file.png</file>
         <file>icons/icon_connection.png</file>
+        <file>icons/icon_no_connection.png</file>
     </qresource>
 </RCC>

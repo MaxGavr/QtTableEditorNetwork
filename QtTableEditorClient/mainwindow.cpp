@@ -59,7 +59,7 @@ void MainWindow::createActions()
     deleteStudentAction->setStatusTip(tr("Найти и удалить записи о студентах по заданным критериям"));
     connect(deleteStudentAction, SIGNAL(triggered(bool)), this, SLOT(showDeleteDialog()));
 
-    connectToServerAction = new QAction(QIcon(":/icons/icon_connection.png"), tr("Подключиться к серверу"), this);
+    connectToServerAction = new QAction(QIcon(":/icons/icon_no_connection.png"), tr("Подключиться к серверу"), this);
     connectToServerAction->setShortcut(Qt::Key_4);
     connectToServerAction->setStatusTip(tr("Подключиться к удаленному серверу"));
     connect(connectToServerAction, SIGNAL(triggered(bool)), this, SLOT(showServerDialog()));
@@ -173,6 +173,13 @@ DatabaseManager *MainWindow::getManager() const
 void MainWindow::setManager(DatabaseManager *value)
 {
     manager = value;
+    if (manager)
+    {
+        connect(manager->getSocket()->getSocket(), SIGNAL(disconnected()),
+                this, SLOT(lostConnection()));
+        connect(manager->getSocket()->getSocket(), SIGNAL(connected()),
+                this, SLOT(connectionEstablished()));
+    }
 }
 
 void MainWindow::showAddDialog()
@@ -197,4 +204,16 @@ void MainWindow::showServerDialog()
 {
     ConnectToServerDialog dialog(getManager(), this);
     dialog.exec();
+}
+
+void MainWindow::lostConnection()
+{
+    connectToServerAction->setIcon(QIcon(":/icons/icon_no_connection.png"));
+    QMessageBox::warning(this, tr("Интернет"), tr("Соединение с сервером потеряно!"),
+                         QMessageBox::Ok);
+}
+
+void MainWindow::connectionEstablished()
+{
+    connectToServerAction->setIcon(QIcon(":/icons/icon_connection.png"));
 }

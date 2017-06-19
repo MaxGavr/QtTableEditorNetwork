@@ -1,7 +1,7 @@
 #pragma once
 
 #include <QObject>
-#include <QAbstractSocket>
+#include <QTcpSocket>
 
 #include "../socket/socketadapter.h"
 #include "../model/student.h"

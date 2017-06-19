@@ -34,6 +34,10 @@ public slots:
     void showDeleteDialog();
     void showServerDialog();
 
+private slots:
+    void lostConnection();
+    void connectionEstablished();
+
 private:
     bool saveConfirmation();
 
