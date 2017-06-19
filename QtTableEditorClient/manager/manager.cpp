@@ -30,6 +30,11 @@ bool DatabaseManager::saveDatabaseToFile(const QString &fileName)
     getSocket()->sendRequest(TcpSocketAdapter::SAVE_DATABASE, fileName);
 }
 
+void DatabaseManager::getAvailableFiles()
+{
+    getSocket()->sendRequest(TcpSocketAdapter::LOAD_FILES);
+}
+
 bool DatabaseManager::loadDatabaseFromFile(const QString &fileName)
 {
     getSocket()->sendRequest(TcpSocketAdapter::LOAD_DATABASE, fileName);
@@ -109,6 +114,11 @@ void DatabaseManager::parseRequest(TcpSocketAdapter::REQUESTS requestId, const Q
     case TcpSocketAdapter::STUDENTS_DELETED:
     {
         emit studentsDeleted(data.toInt());
+        break;
+    }
+    case TcpSocketAdapter::LOAD_FILES:
+    {
+        emit availableFilesReceived(data.split(QChar('|')));
         break;
     }
     }

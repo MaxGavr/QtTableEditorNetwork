@@ -32,7 +32,7 @@ void MainWindow::createActions()
     openFileAction = new QAction(QIcon(":/icons/icon_open_file.png"), tr("Открыть файл"), this);
     openFileAction->setShortcut(QKeySequence::Open);
     openFileAction->setStatusTip(tr("Открыть файл с таблицей студентов"));
-    connect(openFileAction, SIGNAL(triggered(bool)), this, SLOT(openFile()));
+    connect(openFileAction, SIGNAL(triggered(bool)), this, SLOT(requestOpenFile()));
 
     saveFileAction = new QAction(QIcon(":/icons/icon_save_file.png"), tr("Сохранить файл"), this);
     saveFileAction->setShortcut(QKeySequence::Save);
@@ -119,16 +119,19 @@ bool MainWindow::saveConfirmation()
 //    return true;
 }
 
-void MainWindow::openFile()
+void MainWindow::openFile(const QStringList& availableFiles)
 {
 //    if (saveConfirmation())
 //    {
+    disconnect(getManager(), SIGNAL(availableFilesReceived(QStringList)),
+               this, SLOT(openFile(QStringList)));
     bool ok;
-    QString fileName = QInputDialog::getText(this,
+    QString fileName = QInputDialog::getItem(this,
                                              tr("Загрузка"),
                                              tr("Введите имя файла для загрузки:"),
-                                             QLineEdit::Normal,
-                                             QString(),
+                                             availableFiles,
+                                             0,
+                                             true,
                                              &ok);
     if (ok && !fileName.isEmpty())
     {
@@ -216,4 +219,11 @@ void MainWindow::lostConnection()
 void MainWindow::connectionEstablished()
 {
     connectToServerAction->setIcon(QIcon(":/icons/icon_connection.png"));
+}
+
+void MainWindow::requestOpenFile()
+{
+    connect(getManager(), SIGNAL(availableFilesReceived(QStringList)),
+            this, SLOT(openFile(QStringList)));
+    getManager()->getAvailableFiles();
 }

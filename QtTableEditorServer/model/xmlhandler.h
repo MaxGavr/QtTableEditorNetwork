@@ -17,6 +17,8 @@ public:
     bool readFromFile(QString fileName);
     bool writeToFile(QString fileName);
 
+    QStringList getAvailableFiles() const;
+
 private:
     QDomElement writeStudent(QDomDocument &doc, const Student &student);
     QDate parseDate(const QString& stringDate);

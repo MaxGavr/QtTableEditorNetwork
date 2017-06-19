@@ -13,7 +13,7 @@ public:
     enum REQUESTS {ADD_STUDENT, SEARCH_STUDENTS, REMOVE_STUDENTS,
                    GET_PAGE, COUNT_PAGES, VALIDATE_PAGE,
                    DATABASE_UPDATED, STUDENTS_DELETED,
-                   SAVE_DATABASE, LOAD_DATABASE,
+                   SAVE_DATABASE, LOAD_DATABASE, LOAD_FILES,
                    INVALID_INSERTION, DUPLICATE_INSERTION};
 
     void sendRequest(TcpSocketAdapter::REQUESTS requestId, QString data = QString());

@@ -138,6 +138,14 @@ void ThreadableClientWrapper::parseRequest(TcpSocketAdapter::REQUESTS requestId,
         database->getXmlHandler()->readFromFile(fileName);
         break;
     }
+    case Tcp::REQUESTS::LOAD_FILES:
+    {
+        emit requestReceived(tr("список доступных файлов"));
+        QStringList files = database->getXmlHandler()->getAvailableFiles();
+        socket->sendRequest(Tcp::REQUESTS::LOAD_FILES, files.join(QChar('|')));
+        emit responseSent(tr("список доступных файлов "));
+        break;
+    }
     }
 }
 

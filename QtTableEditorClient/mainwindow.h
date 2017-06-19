@@ -26,7 +26,8 @@ public:
     void createToolBars();
 
 public slots:
-    void openFile();
+    void requestOpenFile();
+    void openFile(const QStringList& availableFiles);
     void saveFile();
     void saveFileAs();
     void showAddDialog();

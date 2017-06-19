@@ -2,6 +2,7 @@
 #include "database.h"
 #include <QIODevice>
 #include <QTextStream>
+#include <QDir>
 
 const QString XmlHandler::XML_TAG_STUDENTS = "students";
 const QString XmlHandler::XML_TAG_STUDENT = "student";
@@ -92,6 +93,12 @@ bool XmlHandler::writeToFile(QString fileName)
         QTextStream(&file) << doc.toString();
         return true;
     }
+}
+
+QStringList XmlHandler::getAvailableFiles() const
+{
+    QDir currentDir(QString(), "*" + XmlHandler::FILE_FORMAT);
+    return currentDir.entryList();
 }
 
 QDomElement XmlHandler::writeStudent(QDomDocument &doc, const Student &student)

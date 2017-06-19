@@ -23,6 +23,7 @@ public:
 
     bool loadDatabaseFromFile(const QString& fileName);
     bool saveDatabaseToFile(const QString& fileName);
+    void getAvailableFiles();
 
     void addStudent(const QString& first, const QString& second, const QString& middle,
                     const QDate& birth, const QDate& enrollment, const QDate& graduation);
@@ -45,6 +46,7 @@ signals:
     void pageRetrieved(Student::StudentSet page);
     void pageValidated(bool isValid);
     void pageCounted(int pages);
+    void availableFilesReceived(QStringList files);
 
     void invalidStudentInserted();
     void duplicateStudentInserted();
