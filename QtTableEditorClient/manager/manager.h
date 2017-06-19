@@ -41,6 +41,7 @@ public slots:
 
 signals:
     void databaseUpdated();
+    void studentsDeleted(int amount);
     void pageRetrieved(Student::StudentSet page);
     void pageValidated(bool isValid);
     void pageCounted(int pages);

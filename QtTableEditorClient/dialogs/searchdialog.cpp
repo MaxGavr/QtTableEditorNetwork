@@ -60,7 +60,8 @@ void SearchStudentDialog::reject()
 void SearchStudentDialog::findStudents()
 {
     table->enforceEmpty(false);
-    manager->setSearchPattern(searchWidget->createPattern());
-    table->goToFirstPage();
+    getManager()->setSearchPattern(searchWidget->createPattern());
+    if (!table->isEmpty())
+        table->goToFirstPage();
     table->requestPage();
 }

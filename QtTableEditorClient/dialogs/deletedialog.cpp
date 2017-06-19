@@ -10,7 +10,7 @@ DeleteStudentDialog::DeleteStudentDialog(DatabaseManager *mng, QWidget *parent)
     manageButtons();
     manageLayouts();
 
-    //connect(&db, SIGNAL(studentsDeleted(int)), this, SLOT(notifyDeletion(int)));
+    connect(getManager(), SIGNAL(studentsDeleted(int)), this, SLOT(notifyDeletion(int)));
 }
 
 DatabaseManager *DeleteStudentDialog::getManager()

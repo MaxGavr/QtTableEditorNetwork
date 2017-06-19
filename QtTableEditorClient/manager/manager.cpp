@@ -61,12 +61,14 @@ void DatabaseManager::validatePageBounds(int index, int studentsPerPage)
 
 void DatabaseManager::setSearchPattern(const StudentSearchPattern &pattern)
 {
-    //database->setSearchPattern(pattern);
+    getSocket()->sendRequest(TcpSocketAdapter::SEARCH_STUDENTS,
+                             StudentSearchPattern::toString(pattern));
 }
 
 void DatabaseManager::deleteStudents(const StudentSearchPattern &pattern)
 {
-    //database->removeStudents(pattern);
+    getSocket()->sendRequest(TcpSocketAdapter::REMOVE_STUDENTS,
+                             StudentSearchPattern::toString(pattern));
 }
 
 void DatabaseManager::parseRequest(TcpSocketAdapter::REQUESTS requestId, const QString &data)
@@ -104,10 +106,15 @@ void DatabaseManager::parseRequest(TcpSocketAdapter::REQUESTS requestId, const Q
         emit pageValidated("true" == data ? true : false);
         break;
     }
+    case TcpSocketAdapter::STUDENTS_DELETED:
+    {
+        emit studentsDeleted(data.toInt());
+        break;
+    }
     }
 }
 
 void DatabaseManager::resetSearchPattern()
 {
-    //database->setSearchPattern(StudentSearchPattern());
+    setSearchPattern(StudentSearchPattern());
 }
