@@ -20,7 +20,8 @@ Student::StudentSet Student::studentsFromString(const QString& str)
     Student::StudentSet students;
     foreach (const QString& s, list)
     {
-        students.append(Student::fromString(s));
+        if (!s.isEmpty())
+            students.append(Student::fromString(s));
     }
     return students;
 }
