@@ -2,6 +2,7 @@
 #include "../manager/manager.h"
 #include "../socket/socketadapter.h"
 
+#include <QTime>
 #include <QLineEdit>
 #include <QPlainTextEdit>
 #include <QHBoxLayout>
@@ -17,6 +18,7 @@ ConnectToServerDialog::ConnectToServerDialog(DatabaseManager *mng, QWidget *pare
 {
     setManager(mng);
 
+    setWindowTitle(tr("Подключение к серверу"));
     manageInputFields();
     manageButtons();
     manageLayouts();
@@ -90,7 +92,7 @@ void ConnectToServerDialog::connectionStateChanged(QAbstractSocket::SocketState 
 
 void ConnectToServerDialog::showMessage(const QString &message)
 {
-    m_log->appendPlainText(message);
+    m_log->appendPlainText(QTime::currentTime().toString() + ": " + message);
 }
 
 void ConnectToServerDialog::connectionError(QAbstractSocket::SocketError socketError)
