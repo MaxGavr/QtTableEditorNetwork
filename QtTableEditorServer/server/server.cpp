@@ -39,28 +39,36 @@ void Server::stopServer()
     emit serverMessage(tr("Сервер успешно остановлен"));
 }
 
-void Server::clientConnected(const QString &clientAddress, int clientPort)
+void Server::clientConnected(const QHostAddress& clientAddress, quint16 clientPort)
 {
     emit serverMessage(tr("Клиент подключился: %1:%2")
-                       .arg(clientAddress)
+                       .arg(clientAddress.toString())
                        .arg(QString::number(clientPort)));
 }
 
-void Server::clientDisconnected(const QString &clientAddress, int clientPort)
+void Server::clientDisconnected(const QHostAddress& clientAddress, quint16 clientPort)
 {
     emit serverMessage(tr("Клиент отключился: %1:%2").
-                       arg(clientAddress).
+                       arg(clientAddress.toString()).
                        arg(QString::number(clientPort)));
 }
 
 void Server::requestReceived(const QString& request)
 {
-    emit serverMessage(tr("Получен запрос: %1").arg(request));
+    auto client = qobject_cast<ThreadableClientWrapper *>(QObject::sender());
+    emit serverMessage(tr("[%1:%2] Получен запрос: %3")
+                       .arg(client->getClientAddress().toString())
+                       .arg(QString::number(client->getClientPort()))
+                       .arg(request));
 }
 
 void Server::responseSent(const QString &response)
 {
-    emit serverMessage(tr("Отправлен ответ: %1").arg(response));
+    auto client = qobject_cast<ThreadableClientWrapper *>(QObject::sender());
+    emit serverMessage(tr("[%1:%2] Отправлен ответ: %3")
+                       .arg(client->getClientAddress().toString())
+                       .arg(QString::number(client->getClientPort()))
+                       .arg(response));
 }
 
 void Server::incomingConnection(qintptr socketDescriptor)
@@ -74,8 +82,9 @@ void Server::incomingConnection(qintptr socketDescriptor)
     connect(client, SIGNAL(finished()), client, SLOT(deleteLater()));
     connect(client, SIGNAL(finished()), clientThread, SLOT(deleteLater()));
 
-    connect(client, SIGNAL(clientConnected(QString,int)), this, SLOT(clientConnected(QString,int)));
-    connect(client, SIGNAL(clientDisconnected(QString,int)), this, SLOT(clientDisconnected(QString,int)));
+    qRegisterMetaType<QHostAddress>();
+    connect(client, SIGNAL(clientConnected(QHostAddress,quint16)), this, SLOT(clientConnected(QHostAddress,quint16)));
+    connect(client, SIGNAL(clientDisconnected(QHostAddress,quint16)), this, SLOT(clientDisconnected(QHostAddress,quint16)));
     connect(client, SIGNAL(requestReceived(QString)), this, SLOT(requestReceived(QString)));
     connect(client, SIGNAL(responseSent(QString)), this, SLOT(responseSent(QString)));
 

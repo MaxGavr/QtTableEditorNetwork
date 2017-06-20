@@ -1,6 +1,8 @@
 #pragma once
 
 #include <QObject>
+#include <QHostAddress>
+Q_DECLARE_METATYPE( QHostAddress)
 
 #include "../socket/socketadapter.h"
 
@@ -13,10 +15,15 @@ public:
     explicit ThreadableClientWrapper(qintptr socketDescriptor, QObject *parent = 0);
     ~ThreadableClientWrapper();
 
+    TcpSocketAdapter* getSocketAdapter() const;
+
+    QHostAddress getClientAddress() const;
+    quint16 getClientPort() const;
+
 signals:
     void finished();
-    void clientConnected(const QString& clientAddress, int clientPort);
-    void clientDisconnected(const QString& clientAddress, int clientPort);
+    void clientConnected(const QHostAddress& clientAddress, quint16 clientPort);
+    void clientDisconnected(const QHostAddress& clientAddress, quint16 clientPort);
     void requestReceived(const QString& request);
     void responseSent(const QString& response);
 

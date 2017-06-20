@@ -1,8 +1,7 @@
 #pragma once
 
 #include <QObject>
-
-class QTcpSocket;
+#include <QTcpSocket>
 
 class TcpSocketAdapter : public QObject
 {

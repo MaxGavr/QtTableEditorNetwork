@@ -1,7 +1,6 @@
 #include "socketadapter.h"
 
 #include <QDataStream>
-#include <QTcpSocket>
 
 TcpSocketAdapter::TcpSocketAdapter(QTcpSocket* socket, QObject *parent)
     : QObject(parent), m_socket(socket), m_nextBlockSize(0)

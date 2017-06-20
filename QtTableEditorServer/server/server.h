@@ -2,6 +2,8 @@
 
 #include <QTcpServer>
 
+class ThreadableClientWrapper;
+
 class Server : public QTcpServer
 {
     Q_OBJECT
@@ -12,8 +14,8 @@ public slots:
     void runServer();
     void stopServer();
 
-    void clientConnected(const QString& clientAddress, int clientPort);
-    void clientDisconnected(const QString& clientAddress, int clientPort);
+    void clientConnected(const QHostAddress& clientAddress, quint16 clientPort);
+    void clientDisconnected(const QHostAddress& clientAddress, quint16 clientPort);
     void requestReceived(const QString& request);
     void responseSent(const QString& response);
 

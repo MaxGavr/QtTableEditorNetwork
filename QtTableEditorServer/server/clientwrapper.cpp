@@ -30,8 +30,7 @@ void ThreadableClientWrapper::run()
     sock->setSocketDescriptor(socketDescriptor);
     socket = new TcpSocketAdapter(sock, this);
 
-    emit clientConnected(socket->getSocket()->localAddress().toString(),
-                         socket->getSocket()->localPort());
+    emit clientConnected(getClientAddress(), getClientPort());
 
     connect(socket, SIGNAL(requestReceived(TcpSocketAdapter::REQUESTS,QString)),
             this, SLOT(parseRequest(TcpSocketAdapter::REQUESTS,QString)));
@@ -63,8 +62,7 @@ void ThreadableClientWrapper::stop()
 
 void ThreadableClientWrapper::socketDisconnected()
 {
-    emit clientDisconnected(socket->getSocket()->localAddress().toString(),
-                            socket->getSocket()->localPort());
+    emit clientDisconnected(getClientAddress(), getClientPort());
     stop();
 }
 
@@ -111,7 +109,7 @@ void ThreadableClientWrapper::parseRequest(TcpSocketAdapter::REQUESTS requestId,
         int pages = database->countPages(studentsPerPage);
 
         socket->sendRequest(Tcp::REQUESTS::COUNT_PAGES, QString::number(pages));
-        emit responseSent(tr("страницы подсчитаны: %1").arg(QString::number(pages)));
+        emit responseSent(tr("количество страниц %1").arg(QString::number(pages)));
         break;
     }
     case Tcp::REQUESTS::VALIDATE_PAGE:
@@ -159,7 +157,7 @@ void ThreadableClientWrapper::studentsDeleted(int amount)
 {
     QString data = QString::number(amount);
     socket->sendRequest(TcpSocketAdapter::REQUESTS::STUDENTS_DELETED, data);
-    emit responseSent(tr("записи удалены"));
+    emit responseSent(tr("удалено %1 записей").arg(amount));
 }
 
 void ThreadableClientWrapper::invalidStudentInserted()
@@ -172,4 +170,19 @@ void ThreadableClientWrapper::duplicateStudentInserted()
 {
     socket->sendRequest(TcpSocketAdapter::REQUESTS::DUPLICATE_INSERTION);
     emit responseSent(tr("повторное добавление записи"));
+}
+
+TcpSocketAdapter* ThreadableClientWrapper::getSocketAdapter() const
+{
+    return socket;
+}
+
+QHostAddress ThreadableClientWrapper::getClientAddress() const
+{
+    return getSocketAdapter()->getSocket()->peerAddress();
+}
+
+quint16 ThreadableClientWrapper::getClientPort() const
+{
+    return getSocketAdapter()->getSocket()->peerPort();
 }
