@@ -22,6 +22,7 @@ private slots:
     void showMessage(const QString& message);
 
     void connectToServer();
+    void disconnectFromServer();
     void connectionStateChanged(QAbstractSocket::SocketState socketState);
     void connectionError(QAbstractSocket::SocketError socketError);
 
@@ -40,6 +41,7 @@ private:
 
     QPushButton* m_connectButton;
     QPushButton* m_cancelButton;
+    QPushButton* m_disconnectButton;
 
     QPlainTextEdit* m_log;
 };

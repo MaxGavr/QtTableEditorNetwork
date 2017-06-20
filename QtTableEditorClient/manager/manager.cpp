@@ -25,6 +25,11 @@ void DatabaseManager::connectToServer(const QHostAddress& address, int port)
     m_socket->getSocket()->connectToHost(address, port);
 }
 
+void DatabaseManager::disconnectFromServer()
+{
+    getSocket()->getSocket()->disconnectFromHost();
+}
+
 bool DatabaseManager::saveDatabaseToFile(const QString &fileName)
 {
     getSocket()->sendRequest(TcpSocketAdapter::SAVE_DATABASE, fileName);

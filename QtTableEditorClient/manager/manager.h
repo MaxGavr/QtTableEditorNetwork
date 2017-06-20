@@ -20,6 +20,7 @@ public:
     TcpSocketAdapter* getSocket();
 
     void connectToServer(const QHostAddress& address, int port);
+    void disconnectFromServer();
 
     bool loadDatabaseFromFile(const QString& fileName);
     bool saveDatabaseToFile(const QString& fileName);

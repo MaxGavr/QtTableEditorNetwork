@@ -61,6 +61,11 @@ void ConnectToServerDialog::connectToServer()
     getManager()->connectToServer(address, port);
 }
 
+void ConnectToServerDialog::disconnectFromServer()
+{
+    getManager()->disconnectFromServer();
+}
+
 void ConnectToServerDialog::connectionStateChanged(QAbstractSocket::SocketState socketState)
 {
     switch (socketState)
@@ -76,6 +81,9 @@ void ConnectToServerDialog::connectionStateChanged(QAbstractSocket::SocketState 
         break;
     case QAbstractSocket::ClosingState:
         showMessage(tr("Закрытие соединения..."));
+        break;
+    case QAbstractSocket::UnconnectedState:
+        showMessage(tr("Соединение с сервером закрыто."));
         break;
     }
 }
@@ -129,7 +137,11 @@ void ConnectToServerDialog::manageButtons()
     connect(m_connectButton, SIGNAL(clicked(bool)), this, SLOT(connectToServer()));
     m_connectButton->setDefault(true);
 
-    m_cancelButton = new QPushButton(tr("Отмена"));
+    m_disconnectButton = new QPushButton(tr("Отключиться"));
+    connect(m_disconnectButton, SIGNAL(clicked(bool)), this, SLOT(disconnectFromServer()));
+    m_disconnectButton->setDefault(true);
+
+    m_cancelButton = new QPushButton(tr("Назад"));
     connect(m_cancelButton, SIGNAL(clicked(bool)), this, SLOT(reject()));
 }
 
@@ -143,6 +155,7 @@ void ConnectToServerDialog::manageLayouts()
 
     QHBoxLayout* buttonsLayout = new QHBoxLayout();
     buttonsLayout->addWidget(m_connectButton);
+    buttonsLayout->addWidget(m_disconnectButton);
     buttonsLayout->addWidget(m_cancelButton);
 
     QVBoxLayout* mainLayout = new QVBoxLayout();
