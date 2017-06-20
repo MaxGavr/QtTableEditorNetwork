@@ -15,10 +15,8 @@ MultipageTable::MultipageTable(DatabaseManager *manager, QWidget *parent)
     manageLayouts();
 
     setStudentsPerPage(DEFAULT_STUDENTS_PER_PAGE);
-    //goToFirstPage();
 
     enforceEmpty(false);
-    //requestPage();
 }
 
 void MultipageTable::requestPage()
@@ -145,13 +143,12 @@ void MultipageTable::requestPageChange(int pageIndex)
 void MultipageTable::setCurrentPage(bool isPageValid)
 {
     disconnect(m_manager, SIGNAL(pageValidated(bool)), this, SLOT(setCurrentPage(bool)));
-    disconnect(m_manager, SIGNAL(pageCounted(int)), this, SLOT(requestPageChange(int)));
+    disconnect(m_manager, SIGNAL(pageCounted(int)), 0, 0);
     if (isPageValid)
     {
         currentPage = incomingPage;
         requestPage();
     }
-    //requestPageLabelUpdate();
 }
 
 void MultipageTable::updateStudentsPerPage()
@@ -167,9 +164,10 @@ void MultipageTable::goToFirstPage()
 
 void MultipageTable::goToLastPage()
 {
-    connect(m_manager, SIGNAL(pageCounted(int)), this, SLOT(requestPageChange(int)));
+    connect(m_manager, &DatabaseManager::pageCounted, [=](int pages){
+        this->requestPageChange(pages - 1);
+    });
     getManager()->countPages(getStudentsPerPage());
-    //requestPageChange(maxPages() - 1);
 }
 
 void MultipageTable::goToPreviousPage()
