@@ -21,6 +21,7 @@ public slots:
 
 signals:
     void serverMessage(const QString& message);
+    void serverClosed();
 
 protected:
     void incomingConnection(qintptr socketDescriptor) override;

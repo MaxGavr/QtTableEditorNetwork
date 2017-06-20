@@ -57,6 +57,8 @@ void ThreadableClientWrapper::stop()
     disconnect(database, SIGNAL(invalidInsertion()), this, SLOT(invalidStudentInserted()));
     disconnect(database, SIGNAL(duplicateInsertion()), this, SLOT(duplicateStudentInserted()));
 
+    getSocketAdapter()->getSocket()->disconnectFromHost();
+
     emit finished();
 }
 

@@ -35,6 +35,7 @@ void Server::runServer()
 
 void Server::stopServer()
 {
+    emit serverClosed();
     close();
     emit serverMessage(tr("Сервер успешно остановлен"));
 }
@@ -77,6 +78,7 @@ void Server::incomingConnection(qintptr socketDescriptor)
     QThread* clientThread = new QThread();
     client->moveToThread(clientThread);
 
+    connect(this, SIGNAL(serverClosed()), client, SLOT(stop()));
     connect(clientThread, SIGNAL(started()), client, SLOT(run()));
     connect(client, SIGNAL(finished()), clientThread, SLOT(quit()));
     connect(client, SIGNAL(finished()), client, SLOT(deleteLater()));
